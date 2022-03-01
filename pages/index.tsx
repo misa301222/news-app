@@ -1,27 +1,13 @@
-import { Box, Button, Input } from '@chakra-ui/react'
 import type { NextPage } from 'next'
-import Link from 'next/link'
-import { SyntheticEvent, useState } from 'react'
-import { useAuth } from '../config/hook/auth'
+import { useEffect, useState } from 'react'
+import Start from '../components/Start/Start';
 
 const Home: NextPage = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   return (
-    <div>
-      <Link href={`/signIn`}>
-        <Button>
-          Go to SignIn
-        </Button>
-      </Link>
-
-      <Link href={`/login`}>
-        <Button>
-          Go to LogIn
-        </Button>
-      </Link>
-    </div>
-
+    <Start />
   )
 }
 
-export default Home
+export default Home;

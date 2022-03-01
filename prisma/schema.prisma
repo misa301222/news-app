@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  userId          Int     @unique @default(autoincrement()) @map(name: "user_id")
+  fullName        String  @map(name: "full_name")
+  email           String  @map(name: "email")
+  password        String  @map(name: "password")
+  privateProfile  Boolean @map(name: "private_profile")
+  profileImageURL String  @map(name: "profile_image_url")
+  coverImageURL   String  @map(name: "cover_image_url")
+  totalPosts      Int     @map(name: "total_posts")
+  totalMessages   Int     @map(name: "total_messages")
+  role            Int     @map(name: "role")
+
+  @@map("users")
+}
+
+model Roles {
+  roleId   Int    @unique @default(autoincrement()) @map(name: "role_id")
+  roleName String @map(name: "role_name")
+
+  @@map("roles")
+}
+
+model ForumCategory {
+  forumCategoryId   Int    @unique @default(autoincrement()) @map(name: "forum_category_id")
+  forumCategoryName String @map(name: "forum_category_name")
+
+  @@map("forum_category")
+}

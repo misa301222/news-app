@@ -1,7 +1,7 @@
-import SignIn from "../components/SignIn/SignIn";
+import SignUp from "../components/SignUp/SignUp";
 
-function SignInPage() {
-    return <SignIn />
+function SignUpPage() {
+    return <SignUp />
 }
 
 /*
@@ -12,4 +12,4 @@ export async function getServerSideProps(context: any) {
 }
 */
 
-export default SignInPage;
+export default SignUpPage;

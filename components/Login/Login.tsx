@@ -1,52 +1,78 @@
-import { Box, Button, Input } from "@chakra-ui/react";
+import { Box, Button, FormControl, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
-import { useAuth } from "../../config/hook/auth";
+import { useSession, signIn } from 'next-auth/react';
+import { IoLogIn } from "react-icons/io5";
+import Swal from "sweetalert2";
 
 function Login() {
-    const [userName, setUserName] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [isRight, setIsRight] = useState<boolean>(false);
+    const router = useRouter();
 
-    const { signInWithEmailAndPasswordAuth } = useAuth();
+    async function login(email: string, password: string) {
+        const result: any = await signIn('credentials', {
+            redirect: false,
+            email: email,
+            password: password
+        });
+        console.log(result);
+        if (!result.error) {
+            localStorage.setItem('email', email);
+            localStorage.setItem('isLoggedIn', JSON.stringify(true));
+
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Logged In Successfully!',
+                showConfirmButton: false,
+                timer: 900
+            }).then(() => {
+                router.push('/');
+            });
+        } else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: `${result.error}`,
+                showConfirmButton: true,
+            });
+        }
+    }
 
     const handleOnSubmitForm = async (event: SyntheticEvent) => {
         event.preventDefault();
-
-        await signInWithEmailAndPasswordAuth(userName, password)
-            .then((authUser: any) => {
-                console.log('ok: ', authUser);
-                setIsRight(true);
-            })
-            .catch((error: any) => {
-                console.log(error);
-                setIsRight(false);
-            });
+        await login(email, password);
     }
 
     return (
         <div>
-            <Box p='6' fontSize={'9xl'}>
-                This is a Login section
+            <Box p='6'>
+                <Text fontSize={'4xl'} fontWeight={'bold'}>Login <IoLogIn> </IoLogIn></Text>
             </Box>
 
-            <form onSubmit={handleOnSubmitForm}>
-                <Input onChange={(e) => setUserName(e.target.value)} placeholder='UserName'>
-                </Input>
+            <Box p='10' shadow={"lg"} width={"35rem"} mx="auto">
+                <form onSubmit={handleOnSubmitForm} >
+                    <Box marginBottom={'2rem'}>
+                        <FormLabel display={'block'}>
+                            <Heading fontSize={'xl'}>Email <span style={{ color: 'red' }}>*</span></Heading>
+                        </FormLabel>
+                        <Input id='email' onChange={(e) => setEmail(e.target.value)} placeholder='Email' type={'email'}>
+                        </Input>
+                    </Box>
 
-                <Input onChange={(e) => setPassword(e.target.value)} placeholder='Password'>
-                </Input>
-
-                <Button type='submit'>Login</Button>
-            </form>
-
-            {isRight ?
-                <Box p='5' fontSize={`2xl`} color={`green`} fontWeight={"bold"} >
-                    User is right!
-                </Box> :
-                <Box p='5' fontSize={`2xl`} color={`red`} fontWeight={"bold"} >
-                    User is wrong!
-                </Box>
-            }
+                    <Box marginBottom={'2rem'}>
+                        <FormLabel>
+                            <Heading fontSize={'xl'}>Password <span style={{ color: 'red' }}>*</span></Heading>
+                        </FormLabel>
+                        <Input id='password' onChange={(e) => setPassword(e.target.value)} placeholder='Password' type={'password'}>
+                        </Input>
+                    </Box>
+                    <Box textAlign={'center'}>
+                        <Button disabled={!email || !password} mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }} type='submit'>Login</Button>
+                    </Box>
+                </form>
+            </Box>
         </div>
     )
 }
