@@ -33,8 +33,21 @@ model Roles {
 }
 
 model ForumCategory {
-  forumCategoryId   Int    @unique @default(autoincrement()) @map(name: "forum_category_id")
-  forumCategoryName String @map(name: "forum_category_name")
+  forumCategoryId          Int    @unique @default(autoincrement()) @map(name: "forum_category_id")
+  forumCategoryName        String @map(name: "forum_category_name")
+  forumCategoryDescription String @map("forum_category_description")
 
   @@map("forum_category")
+}
+
+model Article {
+  articleId           Int      @unique @default(autoincrement()) @map("article_id")
+  articleHeader       String   @map("article_header")
+  articleSubHeader    String   @map("article_sub_header")
+  articleMainImageURL String[] @map("article_main_image_url")
+  articleParagraph    String[] @map("article_paragraph")
+  articleImageURL     String[] @map("article_image_url")
+  createdBy           String   @map("created_by")
+
+  @@map("article")
 }

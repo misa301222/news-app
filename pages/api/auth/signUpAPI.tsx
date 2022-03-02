@@ -1,9 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { hash } from 'bcryptjs';
+import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-async function handler(req: any, res: any) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { fullName, email, password } = req.body;
 

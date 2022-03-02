@@ -22,6 +22,8 @@ import { ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { IoNewspaper } from 'react-icons/io5';
 import { motion } from 'framer-motion';
+import { FaNewspaper } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 
 const Links = ['Home', 'SignIn', 'Login'];
 
@@ -42,12 +44,17 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 function NavBar(props: any) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { data: session, status }: any = useSession();
+    const router = useRouter();
 
     function logoutHandler() {
         localStorage.clear();
         signOut({
             callbackUrl: '/'
         });
+    }
+
+    const handleClickPublish = () => {
+        router.push('/publish/publish');
     }
 
     return (
@@ -88,6 +95,18 @@ function NavBar(props: any) {
                                 }}
                                 href={`/`}>
                                 <Text fontWeight={'bold'}>Home</Text>
+                            </Link>
+
+                            <Link
+                                px={2}
+                                py={1}
+                                rounded={'md'}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: useColorModeValue('gray.300', 'gray.700'),
+                                }}
+                                href={`/publish/explorePublish`}>
+                                <Text fontWeight={'bold'}>Explore</Text>
                             </Link>
 
                             <Link
@@ -148,7 +167,7 @@ function NavBar(props: any) {
                                     />
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem>Link 1</MenuItem>
+                                    <MenuItem onClick={() => handleClickPublish()} fontWeight={'bold'} fontSize={'md'}><FaNewspaper></FaNewspaper> <Text pl={'0.5rem'}>Publish</Text></MenuItem>
                                     <MenuItem>Link 2</MenuItem>
                                     <MenuDivider />
                                     <MenuItem onClick={logoutHandler}>Logout</MenuItem>
