@@ -1,12 +1,46 @@
-import { Box, Container, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Container, Divider, Flex, Heading, Link, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { BsFillBookFill, BsFillPlusSquareFill } from "react-icons/bs";
 import { FaNewspaper } from "react-icons/fa";
+import { MdArticle } from "react-icons/md";
 import { RiDeleteBack2Fill } from "react-icons/ri";
+
+interface Article {
+    articleHeader: string,
+    articleSubHeader: string,
+    articleMainImageURL: string[],
+    articleParagraph: string[],
+    articleImageURL: string[],
+    createdBY: string
+}
 
 function ExplorePublish() {
     const router = useRouter();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [articles, setArticles] = useState<Article[]>();
+
+    const handleOnClickSeeArtticles = async () => {
+        onOpen();
+        const email: string = localStorage.getItem('email')!;
+        if (email) {
+            const response = await fetch(`/api/article/getArticleByEmail/${email}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Something went wrong!');
+            }
+
+            setArticles(data);
+        }
+    }
 
     const handleOnCickPublishArticle = () => {
         router.push('/publish/publish');
@@ -57,6 +91,7 @@ function ExplorePublish() {
                                 type: 'spring'
 
                             }}
+                            onClick={async () => handleOnClickSeeArtticles()}
                         >
                             <Box p='1' bgColor={'gray.700'} color={'white'} borderRadius={"xl"} w={'22rem'} h={'8rem'} shadow={'dark-lg'}>
                                 <Flex direction={'row'}>
@@ -107,6 +142,32 @@ function ExplorePublish() {
                     </Flex>
                 </Box>
             </Container>
+
+            <Modal onClose={onClose} size={'full'} isOpen={isOpen}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader bg={'gray.700'} fontSize={'2xl'} color={'white'}>Your Articles <MdArticle></MdArticle></ModalHeader>
+                    <ModalCloseButton color={'white'} />
+                    <ModalBody>
+                        <Container>
+                            {
+                                articles?.map((element: Article, index: number) => (
+                                    <Box key={index}>
+                                        {/* TODO CREATE NEW ARTICLE COMPONENT AND REDIRECT HERE */}
+                                        <Link href={`/`}>
+                                            {element.articleHeader}
+                                        </Link>
+                                    </Box>
+                                ))
+                            }
+                        </Container>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={onClose}>Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
         </Box>
     )
 }

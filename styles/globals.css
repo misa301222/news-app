@@ -18,3 +18,7 @@ a {
 svg {
   display: inline !important;
 }
+
+.swal2-container {
+  z-index: 100000 !important;
+}
