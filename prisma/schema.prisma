@@ -47,6 +47,7 @@ model Article {
   articleMainImageURL String[] @map("article_main_image_url")
   articleParagraph    String[] @map("article_paragraph")
   articleImageURL     String[] @map("article_image_url")
+  datePublished       DateTime @map("date_published")
   createdBy           String   @map("created_by")
 
   @@map("article")

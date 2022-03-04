@@ -24,7 +24,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     if (req.method === 'POST') {
-        const { header, subHeader, mainImage, paragraph, articleImage, email } = req.body;
+        const { header, subHeader, mainImage, paragraph, articleImage, email, datePublished } = req.body;
         const session = await getSession({ req });
 
         if (!session) {
@@ -38,6 +38,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 articleMainImageURL: mainImage,
                 articleParagraph: paragraph,
                 articleImageURL: articleImage,
+                datePublished: datePublished,
                 createdBy: email
             }
         })

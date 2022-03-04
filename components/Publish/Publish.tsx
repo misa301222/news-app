@@ -10,7 +10,8 @@ interface Article {
     articleMainImageURL: string[],
     articleParagraph: string[],
     articleImageURL: string[],
-    createdBY: string
+    datePublished: Date,
+    createdBy: string
 }
 
 function Publish() {
@@ -29,7 +30,8 @@ function Publish() {
         articleMainImageURL: [''],
         articleParagraph: [''],
         articleImageURL: [''],
-        createdBY: ''
+        datePublished: new Date(),
+        createdBy: ''
     });
 
     const [imagesMainURL, setImagesMainURL] = useState<string[]>([]);
@@ -163,6 +165,7 @@ function Publish() {
     async function saveArticle(header: string, subHeader: string, mainImage: string[], paragraph: string[], articleImage: string[]) {
         let email = localStorage.getItem('email');
         if (email) {
+            const datePublished = new Date();
             const response = await fetch(`/api/article/articleAPI`, {
                 body: JSON.stringify({
                     header: header,
@@ -170,6 +173,7 @@ function Publish() {
                     mainImage: mainImage,
                     paragraph: paragraph,
                     articleImage: articleImage,
+                    datePublished: datePublished,
                     email: email
                 }),
                 headers: {
