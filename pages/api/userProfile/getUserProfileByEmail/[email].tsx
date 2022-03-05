@@ -3,7 +3,6 @@ import { getSession } from "next-auth/react";
 import prisma from "../../../../lib/prisma";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-
     if (req.method === 'GET') {
         const session = await getSession({ req });
 
@@ -12,13 +11,13 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
 
         const { email }: any = req.query;
-        let articles = await prisma.article.findMany({
+        let userProfile = await prisma.userProfile.findUnique({
             where: {
-                createdBy: email
-            }
+                email: email
+            },            
         });
 
-        res.status(201).json(articles);
+        res.status(201).json(userProfile);
     }
 }
 

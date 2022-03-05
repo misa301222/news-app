@@ -22,8 +22,9 @@ import { ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { IoNewspaper } from 'react-icons/io5';
 import { motion } from 'framer-motion';
-import { FaNewspaper } from 'react-icons/fa';
+import { FaNewspaper, FaUserCircle } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import { GrConfigure } from "react-icons/gr";
 
 const Links = ['Home', 'SignIn', 'Login'];
 
@@ -55,6 +56,15 @@ function NavBar(props: any) {
 
     const handleClickPublish = () => {
         router.push('/publish/publish');
+    }
+
+    const handleClickProfile = () => {
+        const { email } = session.user;
+        router.push(`/profile/${email}`);
+    }
+
+    const handleClickSettings = () => {
+        router.push('/settings');
     }
 
     return (
@@ -167,8 +177,9 @@ function NavBar(props: any) {
                                     />
                                 </MenuButton>
                                 <MenuList>
+                                    <MenuItem onClick={() => handleClickProfile()} fontWeight={'bold'} fontSize={'md'}><FaUserCircle></FaUserCircle><Text pl={'0.5rem'}>Profile</Text></MenuItem>
                                     <MenuItem onClick={() => handleClickPublish()} fontWeight={'bold'} fontSize={'md'}><FaNewspaper></FaNewspaper> <Text pl={'0.5rem'}>Publish</Text></MenuItem>
-                                    <MenuItem>Link 2</MenuItem>
+                                    <MenuItem onClick={() => handleClickSettings()} fontWeight={'bold'} fontSize={'md'}><GrConfigure></GrConfigure> <Text pl={'0.5rem'}>Settings</Text></MenuItem>
                                     <MenuDivider />
                                     <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                                 </MenuList>

@@ -1,23 +1,26 @@
-import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { verifyPassword } from "../../../lib/auth";
+import prisma from "../../../lib/prisma";
 
 interface User {
     userId: number,
     fullName: string,
     email: string,
     password: string,
-    privateProfile: boolean,
-    profileImageURL: string,
-    coverImageURL: string,
-    totalPosts: number,
-    totalMessages: number,
     role: number,
 }
 
-const prisma = new PrismaClient();
+interface UserProfile {
+    email: string,
+    profileImageURL: string,
+    coverImageURL: string,
+    aboutMe: string,
+    privateProfile: boolean,
+    totalPosts: number,
+    totalMessages: number
+}
 
 export default NextAuth({
     session: {
@@ -42,6 +45,8 @@ export default NextAuth({
 
                 //const user = await User.findOne({ email: credentials.email });
                 const user: any = await prisma.users.findFirst({ where: { email: credentials.email } });
+                const userProfile: any = await prisma.userProfile.findFirst({ where: { email: credentials.email } });
+
                 if (!user) {
                     throw new Error('Invalid username or password. Please check the data!');
                 }
@@ -55,7 +60,7 @@ export default NextAuth({
                     throw new Error('Invalid username or password. Please check the data!');
                 }
 
-                return user;
+                return { user: user, profile: userProfile };
             },
         })
     ],
@@ -68,13 +73,14 @@ export default NextAuth({
             //  "user" parameter is the object received from "authorize"
             //  "token" is being send below to "session" callback...
             //  ...so we set "user" param of "token" to object from "authorize"...
-            //  ...and return it...
+            //  ...and return it...            
             if (user) {
+                console.log(user);
                 token.id = user.userId;
-                const { role } = user;
-                const { email } = user;
-                const { fullName } = user;
-                const { profileImageURL } = user;
+                const { role } = user.user;
+                const { email } = user.user;
+                const { fullName } = user.user;
+                const { profileImageURL } = user.profile;
 
                 token.email = email;
                 token.role = role;

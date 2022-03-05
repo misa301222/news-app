@@ -11,18 +11,25 @@ datasource db {
 }
 
 model Users {
-  userId          Int     @unique @default(autoincrement()) @map(name: "user_id")
-  fullName        String  @map(name: "full_name")
-  email           String  @map(name: "email")
-  password        String  @map(name: "password")
-  privateProfile  Boolean @map(name: "private_profile")
-  profileImageURL String  @map(name: "profile_image_url")
-  coverImageURL   String  @map(name: "cover_image_url")
-  totalPosts      Int     @map(name: "total_posts")
-  totalMessages   Int     @map(name: "total_messages")
-  role            Int     @map(name: "role")
+  userId   Int    @unique @default(autoincrement()) @map(name: "user_id")
+  fullName String @map(name: "full_name")
+  email    String @map(name: "email")
+  password String @map(name: "password")
+  role     Int    @map(name: "role")
 
   @@map("users")
+}
+
+model UserProfile {
+  email           String  @unique @map("email")
+  profileImageURL String  @map("profile_image_url")
+  coverImageURL   String  @map("cover_image_url")
+  aboutMe         String  @map("about_me")
+  privateProfile  Boolean @map("private_profile")
+  totalPosts      Int     @map("total_posts")
+  totalMessages   Int     @map("total_messages")
+
+  @@map("user_profile")
 }
 
 model Roles {

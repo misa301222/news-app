@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-
-const prisma = new PrismaClient();
+import prisma from "../../../../lib/prisma";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
@@ -17,6 +15,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         let user = await prisma.users.findFirst({
             where: {
                 email: email
+            },
+            select: {
+                email: true,
+                fullName: true,
+                role: true,
+                userId: true,                
             }
         });
 

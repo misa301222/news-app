@@ -19,12 +19,17 @@ interface User {
     fullName: string,
     email: string,
     password: string,
-    privateProfile: boolean,
+    role: number,
+}
+
+interface UserProfile {
+    email: string,
     profileImageURL: string,
     coverImageURL: string,
+    aboutMe: string,
+    privateProfile: boolean,
     totalPosts: number,
-    totalMessages: number,
-    role: number,
+    totalMessages: number
 }
 
 function ShowArticle({ data }: any) {
@@ -66,7 +71,7 @@ function ShowArticle({ data }: any) {
                 <Divider borderColor={'black'}></Divider>
             </Container>
 
-            <Container maxW={'container.md'} mt={'2rem'} mb={'10rem'} backgroundColor={'gray.700'} p='5' shadow={'dark-lg'} style={{
+            {/* <Container maxW={'container.md'} mt={'2rem'} mb={'10rem'} backgroundColor={'gray.700'} p='5' shadow={'dark-lg'} style={{
                 backgroundImage: `${user.coverImageURL ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${user.coverImageURL})` : ''}`,
                 backgroundPosition: `${user.coverImageURL ? 'cover' : ''}`,
                 backgroundRepeat: `${user.coverImageURL ? 'no-repeat' : ''}`,
@@ -89,7 +94,7 @@ function ShowArticle({ data }: any) {
                         <Heading color={'white'} fontSize={'xl'}> {user.email} </Heading>
                     </Box>
                 </Flex>
-            </Container>
+            </Container> */}
         </Box>
     )
 }
