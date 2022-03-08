@@ -47,6 +47,18 @@ model ForumCategory {
   @@map("forum_category")
 }
 
+model SubForum {
+  subForumId          Int      @unique @default(autoincrement()) @map("sub_forum_id")
+  subForumName        String   @map("sub_forum_name")
+  subForumDescription String   @map("sub_forum_description")
+  subForumImageURL    String[] @map("sub_forum_image_url")
+  dateCreated         DateTime @map("date_created")
+  createdBy           String   @map("created_by")
+  forumCategoryId     Int      @map("forum_category_id")
+
+  @@map("sub_forum")
+}
+
 model Article {
   articleId           Int      @unique @default(autoincrement()) @map("article_id")
   articleHeader       String   @map("article_header")

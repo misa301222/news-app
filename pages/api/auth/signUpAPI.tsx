@@ -37,7 +37,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                     email: email,
                     profileImageURL: '',
                     coverImageURL: '',
-                    aboutMe: 'PlaceHolder',
+                    aboutMe: '',
                     privateProfile: true,
                     totalPosts: 0,
                     totalMessages: 0

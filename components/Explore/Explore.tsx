@@ -1,5 +1,6 @@
 import { Box, Container, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { MdForum } from 'react-icons/md';
 
@@ -21,24 +22,25 @@ function Explore({ data }: any) {
                 <Divider mt={'1rem'} mb='2rem'></Divider>
                 {
                     forumCategories?.map((element: ForumCategory, index: number) => (
-                        <motion.div
-                            whileHover={{
-                                scale: 1.05
-                            }}
-                            animate={{
-                                type: 'spring',
-                            }}
-                            key={index}>
-                            <Box mb={'1rem'} cursor={'pointer'} borderRadius={'0.3rem'} shadow={'md'}>
-                                <Box p='3' backgroundColor={'gray.200'} borderTopRadius={'0.3rem'}>
-                                    <Heading size={"lg"} fontWeight={'bold'}>{element.forumCategoryName}</Heading>
+                        <Link href={`/forums/enterForum/${element.forumCategoryId}`} key={index}>
+                            <motion.div
+                                whileHover={{
+                                    scale: 1.05
+                                }}
+                                animate={{
+                                    type: 'spring',
+                                }}>
+                                <Box mb={'1rem'} cursor={'pointer'} borderRadius={'0.3rem'} shadow={'md'}>
+                                    <Box p='3' backgroundColor={'gray.200'} borderTopRadius={'0.3rem'}>
+                                        <Heading size={"lg"} fontWeight={'bold'}>{element.forumCategoryName}</Heading>
+                                    </Box>
+                                    <Divider borderColor={'black'}></Divider>
+                                    <Box p={'2'}>
+                                        <Text fontWeight={'bold'} pl='0.8rem'>{element.forumCategoryDescription}</Text>
+                                    </Box>
                                 </Box>
-                                <Divider borderColor={'black'}></Divider>
-                                <Box p={'2'}>
-                                    <Text fontWeight={'bold'} pl='0.8rem'>{element.forumCategoryDescription}</Text>
-                                </Box>
-                            </Box>
-                        </motion.div>
+                            </motion.div>
+                        </Link>
                     ))
                 }
             </Container>

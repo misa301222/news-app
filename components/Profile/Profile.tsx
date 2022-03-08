@@ -83,8 +83,8 @@ function Profile({ data }: any) {
                     <Flex direction={'column'} justifyContent={'space-evenly'} gap={'2rem'} color={'white'}>
                         <Box w={'90%'} h={'40rem'} bgColor={'gray.700'} p={'5'} shadow={"dark-lg"}>
                             <Heading textAlign={'center'}>About Me</Heading>
-                            <Divider></Divider>
-                            <Text>{userProfile.aboutMe}</Text>
+                            <Divider mb={'2rem'}></Divider>                            
+                            <Text fontSize={'xl'}>{userProfile.aboutMe}</Text>
                         </Box>
 
                         <Box w={'90%'} h={'19rem'} bgColor={'gray.700'} p={'5'} shadow={"dark-lg"}>
