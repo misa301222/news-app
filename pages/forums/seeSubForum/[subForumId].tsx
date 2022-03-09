@@ -1,8 +1,8 @@
 import { getSession } from "next-auth/react";
-import SeeForum from "../../../components/Forum/SeeForum";
+import SeeSubForum from "../../../components/Forum/SeeSubForum";
 
-function ForumCategoryIdPage({ subForums }: any) {
-    return <SeeForum data={subForums} />
+function SeeSubForumPage({ subForum }: any) {
+    return <SeeSubForum data={subForum} />
 }
 
 export async function getServerSideProps(context: any) {
@@ -10,7 +10,7 @@ export async function getServerSideProps(context: any) {
     const { req } = context;
     const { cookie } = req.headers;
 
-    const { forumCategoryId } = context.params;
+    const { subForumId } = context.params;
 
     if (!session) {
         return {
@@ -21,22 +21,22 @@ export async function getServerSideProps(context: any) {
         };
     }
 
-    const [responseSubForums] = await Promise.all([
-        fetch(`${process.env.NEXTAUTH_URL}/api/subForum/getSubForumsByForumCategoryId/${forumCategoryId}`, {
+    const [responseSubForum] = await Promise.all([
+        fetch(`${process.env.NEXTAUTH_URL}/api/subForum/getSubForumById/${subForumId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': cookie
             },
-        })
+        }),
     ]);
 
-    const [responseS] = await Promise.all([
-        responseSubForums.json()
+    const [responseR] = await Promise.all([
+        responseSubForum.json()
     ]);
 
-    return { props: { subForums: responseS } }
+    return { props: { subForum: responseR } }
 
 }
 
-export default ForumCategoryIdPage;
+export default SeeSubForumPage;

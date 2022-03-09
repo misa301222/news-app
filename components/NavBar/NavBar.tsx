@@ -131,7 +131,8 @@ function NavBar(props: any) {
                                 <Text fontWeight={'bold'}>Forums</Text>
                             </Link>
 
-                            {!session && (
+                            {session || status === 'loading' ?
+                                null :
                                 <Link
                                     px={2}
                                     py={1}
@@ -142,10 +143,11 @@ function NavBar(props: any) {
                                     }}
                                     href={`/login`}>
                                     Login
-                                </Link>)
+                                </Link>
                             }
 
-                            {!session && (
+                            {session || status === 'loading' ?
+                                null :
                                 <Link
                                     px={2}
                                     py={1}
@@ -156,7 +158,7 @@ function NavBar(props: any) {
                                     }}
                                     href={`/signUp`}>
                                     SignUp
-                                </Link>)
+                                </Link>
                             }
                         </HStack>
                     </HStack>
