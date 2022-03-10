@@ -15,6 +15,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         let subForums = await prisma.subForum.findMany({
             where: {
                 forumCategoryId: Number(forumCategoryId)
+            },
+            orderBy: {
+                dateCreated: 'desc'
             }
         });
 

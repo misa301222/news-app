@@ -1,16 +1,14 @@
 import { getSession } from "next-auth/react";
 import SeeSubForum from "../../../components/Forum/SeeSubForum";
 
-function SeeSubForumPage({ subForum }: any) {
-    return <SeeSubForum data={subForum} />
+function SeeSubForumPage({ subForum, userProfile, user }: any) {
+    return <SeeSubForum data={{ subForum, userProfile, user }} />
 }
 
 export async function getServerSideProps(context: any) {
     const session = await getSession({ req: context.req });
     const { req } = context;
     const { cookie } = req.headers;
-
-    const { subForumId } = context.params;
 
     if (!session) {
         return {
@@ -21,6 +19,8 @@ export async function getServerSideProps(context: any) {
         };
     }
 
+    const { subForumId } = context.params;
+
     const [responseSubForum] = await Promise.all([
         fetch(`${process.env.NEXTAUTH_URL}/api/subForum/getSubForumById/${subForumId}`, {
             method: 'GET',
@@ -28,14 +28,40 @@ export async function getServerSideProps(context: any) {
                 'Content-Type': 'application/json',
                 'Cookie': cookie
             },
-        }),
+        })
     ]);
 
     const [responseR] = await Promise.all([
         responseSubForum.json()
     ]);
 
-    return { props: { subForum: responseR } }
+
+    const { createdBy } = responseR;
+
+    const [responseUserProfile, responseUser] = await Promise.all([
+        fetch(`${process.env.NEXTAUTH_URL}/api/userProfile/getUserProfileByEmail/${createdBy}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': cookie
+            },
+        }),
+        fetch(`${process.env.NEXTAUTH_URL}/api/user/getUserByEmail/${createdBy}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': cookie
+            },
+        })
+    ]);
+
+    const [responseUP, responseU] = await Promise.all([
+        responseUserProfile.json(),
+        responseUser.json()
+    ]);
+
+
+    return { props: { subForum: responseR, userProfile: responseUP, user: responseU } }
 
 }
 

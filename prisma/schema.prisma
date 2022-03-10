@@ -59,6 +59,15 @@ model SubForum {
   @@map("sub_forum")
 }
 
+model SubForumReply {
+  subForumReplyId          Int    @unique @default(autoincrement()) @map("sub_forum_reply_id")
+  subForumReplyDescription String @map("sub_forum_reply_description")
+  createdBy                String @map("created_by")
+  subForumId               Int    @map("sub_forum_id")
+
+  @@map("sub_forum_reply")
+}
+
 model Article {
   articleId           Int      @unique @default(autoincrement()) @map("article_id")
   articleHeader       String   @map("article_header")

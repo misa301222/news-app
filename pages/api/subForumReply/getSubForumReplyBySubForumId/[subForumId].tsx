@@ -11,13 +11,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
 
         const { subForumId } = req.query;
-        let subForum = await prisma.subForum.findUnique({
+
+        let subForumReplies = await prisma.subForumReply.findMany({
             where: {
                 subForumId: Number(subForumId)
             }
         });
 
-        res.status(201).json(subForum);
+        res.status(201).json(subForumReplies);
     }
 }
 

@@ -118,8 +118,17 @@ function NewSubForum({ data }: any) {
     const handleOnSubmitNewTopic = async (event: SyntheticEvent) => {
         event.preventDefault();
         let newSubForum: SubForum = subForum;
+        let imagesArray: string[] = [];
         newSubForum.dateCreated = new Date();
         newSubForum.createdBy = session.user.email;
+
+        for (let i = 0; i < imagesURL.length; i++) {
+            if (imagesURL[i] !== '') {
+                imagesArray.push(imagesURL[i]);
+            }
+        }
+        newSubForum.subForumImageURL = imagesArray;
+
 
         if (newSubForum.createdBy) {
             await saveSubTopic(newSubForum).then(response => {
