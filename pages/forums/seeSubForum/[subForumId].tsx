@@ -1,8 +1,8 @@
 import { getSession } from "next-auth/react";
 import SeeSubForum from "../../../components/Forum/SeeSubForum";
 
-function SeeSubForumPage({ subForum, userProfile, user }: any) {
-    return <SeeSubForum data={{ subForum, userProfile, user }} />
+function SeeSubForumPage({ subForum, userProfile, user, subForumReply }: any) {
+    return <SeeSubForum data={{ subForum, userProfile, user, subForumReply }} />
 }
 
 export async function getServerSideProps(context: any) {
@@ -38,7 +38,7 @@ export async function getServerSideProps(context: any) {
 
     const { createdBy } = responseR;
 
-    const [responseUserProfile, responseUser] = await Promise.all([
+    const [responseUserProfile, responseUser, responseSubForumReply] = await Promise.all([
         fetch(`${process.env.NEXTAUTH_URL}/api/userProfile/getUserProfileByEmail/${createdBy}`, {
             method: 'GET',
             headers: {
@@ -52,16 +52,24 @@ export async function getServerSideProps(context: any) {
                 'Content-Type': 'application/json',
                 'Cookie': cookie
             },
+        }),
+        fetch(`${process.env.NEXTAUTH_URL}/api/subForumReply/getSubForumReplyBySubForumId/${subForumId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': cookie
+            },
         })
     ]);
 
-    const [responseUP, responseU] = await Promise.all([
+    const [responseUP, responseU, responseSFR] = await Promise.all([
         responseUserProfile.json(),
-        responseUser.json()
+        responseUser.json(),
+        responseSubForumReply.json()
     ]);
 
 
-    return { props: { subForum: responseR, userProfile: responseUP, user: responseU } }
+    return { props: { subForum: responseR, userProfile: responseUP, user: responseU, subForumReply: responseSFR } }
 
 }
 

@@ -1,11 +1,13 @@
-import { Box, Button, Container, Divider, Flex, Heading, Img, Stack, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Img, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
+import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { BsFilePost } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
 import { AiOutlineComment } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import Link from "next/link";
 import { BiMessageDetail } from 'react-icons/bi'
+import Swal from "sweetalert2";
+import ReplyCard from "../ReplyCard/ReplyCard";
 
 interface SubForum {
     subForumId: number,
@@ -35,10 +37,85 @@ interface User {
     role: number,
 }
 
+interface SubForumReply {
+    subForumReplyDescription: string,
+    createdBy: string,
+    subForumId: number
+}
+
 function SeeSubForum({ data }: any) {
     const [subForum, setSubForum] = useState<SubForum>(data.subForum as SubForum);
     const [userProfile, setUserProfile] = useState<UserProfile>(data.userProfile as UserProfile);
     const [user, setUser] = useState<User>(data.user as User);
+    const [subForumReply, setSubForumReply] = useState<SubForumReply[]>(data.subForumReply as SubForumReply[]);
+    const [newReply, setNewReply] = useState<string>('');
+
+    const { isOpen: isNewReplyOpen, onOpen: onNewReplyOpen, onClose: OnNewReplyClose } = useDisclosure();
+
+
+    const handleOnChangeNewReply = (event: ChangeEvent<HTMLTextAreaElement>) => {
+        setNewReply(event.target.value);
+    }
+
+    const getSubForumsReplies = async () => {
+        const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumId/${subForum.subForumId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'GET',
+        });
+
+        const data = await response.json();
+        console.log(data);
+        if (data) {
+            setSubForumReply(data);
+        }
+    }
+
+    async function saveNewReply(newReplyEntity: SubForumReply) {
+        const response = await fetch(`/api/subForumReply/subForumAPI`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify(newReplyEntity)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const handleOnSubmitNewReply = async (event: SyntheticEvent) => {
+        event.preventDefault();
+        let currentUser = localStorage.getItem('email')!;
+        if (currentUser && newReply) {
+            let newReplyEntity: SubForumReply = {
+                subForumReplyDescription: newReply,
+                createdBy: currentUser,
+                subForumId: subForum.subForumId
+            }
+
+            //console.log(newReplyEntity);
+            await saveNewReply(newReplyEntity).then(response => {
+                if (response) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Message Sent Successfully!',
+                        showConfirmButton: true,
+                    }).then(async () => {
+                        OnNewReplyClose();
+                        await getSubForumsReplies();
+                    });
+                }
+            });
+        }
+    }
 
     return (
         <Box>
@@ -154,13 +231,50 @@ function SeeSubForum({ data }: any) {
                 <Divider borderColor={'black'} mt={'2rem'}></Divider>
 
                 <Box textAlign={'end'} mt={'1rem'}>
-                    <Link href={{ pathname: `/forums/newReply/${subForum.subForumId}` }}
-                    >
-                        <Button type="submit" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}><BiMessageDetail></BiMessageDetail>Reply</Button>
-                    </Link>
+                    {/* <Link href={{ pathname: `/forums/newReply/${subForum.subForumId}` }}> */}
+                    <Button onClick={onNewReplyOpen} type="button" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}><BiMessageDetail></BiMessageDetail>Reply</Button>
+                    {/* </Link> */}
                 </Box>
 
+                <Container maxW={'container.xl'}>
+                    <Heading textAlign={'center'} mt={'2rem'} mb='1rem'>Replies</Heading>
+                    <Divider mb={'2rem'}></Divider>
+                    {
+                        subForumReply.map((element: SubForumReply, index: number) => (
+                            <Box key={index} mb={'2rem'} border={'1px'} p='5' borderColor={'gray.200'} borderRadius={'xl'} shadow={'lg'}>
+                                <ReplyCard subForumReply={element} />
+                            </Box>
+                        ))
+                    }
+                </Container>
+
             </Container>
+
+
+            <Modal isOpen={isNewReplyOpen} onClose={OnNewReplyClose} size={'xl'}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader color={'white'} bgColor={'gray.700'}>New Reply <BiMessageDetail></BiMessageDetail></ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <form onSubmit={handleOnSubmitNewReply}>
+                            <Box mt={'1rem'} mb={'2rem'}>
+                                <FormLabel>
+                                    Your Reply
+                                </FormLabel>
+
+                                <Textarea onChange={handleOnChangeNewReply} rows={5} resize={'none'} placeholder={'What are you thinking of? ...'} />
+                            </Box>
+
+                            <Box textAlign={'end'} mb={'2rem'}>
+                                <Button type="submit" disabled={!newReply.length} mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}>Submit</Button>
+                            </Box>
+                        </form>
+
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
         </Box>
     )
 }
