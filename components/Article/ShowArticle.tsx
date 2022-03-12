@@ -1,7 +1,9 @@
 import { Box, Center, Container, Divider, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { Carousel } from "react-responsive-carousel";
+import { motion } from 'framer-motion';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Link from "next/link";
 
 interface Article {
     articleId: number,
@@ -33,8 +35,9 @@ interface UserProfile {
 }
 
 function ShowArticle({ data }: any) {
-    const [article, setArticle] = useState<Article>(data.article);
-    const [user, setUser] = useState<User>(data.user);
+    const [article, setArticle] = useState<Article>(data.article as Article);
+    const [user, setUser] = useState<User>(data.user as User);
+    const [userProfile, setUserProfile] = useState<UserProfile>(data.userProfile as UserProfile);
 
     return (
         <Box>
@@ -71,30 +74,47 @@ function ShowArticle({ data }: any) {
                 <Divider borderColor={'black'}></Divider>
             </Container>
 
-            {/* <Container maxW={'container.md'} mt={'2rem'} mb={'10rem'} backgroundColor={'gray.700'} p='5' shadow={'dark-lg'} style={{
-                backgroundImage: `${user.coverImageURL ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${user.coverImageURL})` : ''}`,
-                backgroundPosition: `${user.coverImageURL ? 'cover' : ''}`,
-                backgroundRepeat: `${user.coverImageURL ? 'no-repeat' : ''}`,
-                backgroundSize: `${user.coverImageURL ? 'cover' : ''}`
+            <Container maxW={'container.md'} mt={'2rem'} mb={'10rem'} backgroundColor={'gray.700'} p='5' shadow={'dark-lg'} style={{
+                backgroundImage: `${userProfile.coverImageURL ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${userProfile.coverImageURL})` : ''}`,
+                backgroundPosition: `${userProfile.coverImageURL ? 'cover' : ''}`,
+                backgroundRepeat: `${userProfile.coverImageURL ? 'no-repeat' : ''}`,
+                backgroundSize: `${userProfile.coverImageURL ? 'cover' : ''}`
             }}>
                 <Flex>
                     <Box>
-                        <Image mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={user.profileImageURL} />
+                        <Link href={`/profile/${userProfile.email}`}>
+                            <Image cursor={'pointer'} mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={userProfile.profileImageURL} />
+                        </Link>
                     </Box>
 
                     <Center height={'10rem'} pl='2rem'>
                         <Divider orientation="vertical" borderColor={'white'}></Divider>
                     </Center>
 
-                    <Box>
-                        <Heading color={'red.300'}>
-                            {user.fullName}
-                        </Heading>
+                    <Box ml={'2rem'}>
+                        <motion.div
+                            whileHover={{
+                                scale: 1.1,
+                                color: '#C53030'
+                            }}
+                            animate={{
+                                type: 'spring'
+                            }}
+                            style={{
+                                cursor: 'pointer',
+                                color: '#FC8181'
+                            }}>
+                            <Link href={`/profile/${userProfile.email}`}>
+                                <Heading color={''}>
+                                    {user.fullName}
+                                </Heading>
+                            </Link>
+                        </motion.div>
 
-                        <Heading color={'white'} fontSize={'xl'}> {user.email} </Heading>
+                        <Heading color={'white'} fontSize={'xl'}> {userProfile.email} </Heading>
                     </Box>
                 </Flex>
-            </Container> */}
+            </Container>
         </Box>
     )
 }

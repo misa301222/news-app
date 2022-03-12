@@ -1,8 +1,8 @@
 import { getSession } from "next-auth/react";
 import ShowArticle from "../../components/Article/ShowArticle";
 
-function ShowArticlePage({ article, user }: any) {
-    return <ShowArticle data={{ article, user }} />;
+function ShowArticlePage({ article, user, userProfile }: any) {
+    return <ShowArticle data={{ article, user, userProfile }} />;
 }
 
 export async function getServerSideProps(context: any) {
@@ -37,7 +37,7 @@ export async function getServerSideProps(context: any) {
 
     let { createdBy } = articleR;
 
-    const [responseUser] = await Promise.all([
+    const [responseUser, responseUserProfile] = await Promise.all([
         fetch(`${process.env.NEXTAUTH_URL}/api/user/getUserByEmail/${createdBy}`, {
             method: 'GET',
             headers: {
@@ -45,13 +45,21 @@ export async function getServerSideProps(context: any) {
                 'Cookie': cookie
             },
         }),
-    ])
-
-    const [userR] = await Promise.all([
-        responseUser.json()
+        fetch(`${process.env.NEXTAUTH_URL}/api/userProfile/getUserProfileByEmail/${createdBy}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Cookie': cookie
+            },
+        }),
     ]);
 
-    return { props: { article: articleR, user: userR } }
+    const [userR, userPR] = await Promise.all([
+        responseUser.json(),
+        responseUserProfile.json()
+    ]);
+
+    return { props: { article: articleR, user: userR, userProfile: userPR } }
 
 }
 

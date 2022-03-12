@@ -24,7 +24,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         });
 
         res.status(201).json({ message: 'Data Created!', ...subForum })
-
     }
 }
 

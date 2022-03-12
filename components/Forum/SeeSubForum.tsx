@@ -1,5 +1,5 @@
 import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Img, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { BsFilePost } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
 import { AiOutlineComment } from 'react-icons/ai';
@@ -8,6 +8,7 @@ import Link from "next/link";
 import { BiMessageDetail } from 'react-icons/bi'
 import Swal from "sweetalert2";
 import ReplyCard from "../ReplyCard/ReplyCard";
+import { useRouter } from "next/router";
 
 interface SubForum {
     subForumId: number,
@@ -49,6 +50,8 @@ function SeeSubForum({ data }: any) {
     const [user, setUser] = useState<User>(data.user as User);
     const [subForumReply, setSubForumReply] = useState<SubForumReply[]>(data.subForumReply as SubForumReply[]);
     const [newReply, setNewReply] = useState<string>('');
+    const [currentUser, setCurrentUser] = useState<string>('');
+    const router = useRouter();
 
     const { isOpen: isNewReplyOpen, onOpen: onNewReplyOpen, onClose: OnNewReplyClose } = useDisclosure();
 
@@ -73,7 +76,7 @@ function SeeSubForum({ data }: any) {
     }
 
     async function saveNewReply(newReplyEntity: SubForumReply) {
-        const response = await fetch(`/api/subForumReply/subForumAPI`, {
+        const response = await fetch(`/api/subForumReply/subForumReplyAPI`, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -117,11 +120,73 @@ function SeeSubForum({ data }: any) {
         }
     }
 
+    async function deleteSubForumRepliesBySubForumId() {
+        const response = await fetch(`/api/subForumReply/subForumReplyAPI`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'DELETE',
+            body: JSON.stringify({
+                subForumId: subForum.subForumId
+            }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const handleOnDeleteSubForum = async () => {
+        let forumCategoryId: number = subForum.forumCategoryId;
+        const response = await deleteSubForumRepliesBySubForumId();
+        const responseSubForum = await deleteSubForumBySubForumId();
+
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Post Deleted Successfully!',
+            showConfirmButton: true,
+        }).then(() => {
+            router.push(`/forums/enterForum/${forumCategoryId}`);
+        });
+    }
+
+    async function deleteSubForumBySubForumId() {
+        const response = await fetch(`/api/subForum/getSubForumById/${subForum.subForumId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    useEffect(() => {
+        setCurrentUser(localStorage.getItem('email')!);
+    }, []);
+
     return (
         <Box>
             <Container mt='2rem' maxW={'container.xl'}>
                 <Heading textAlign={'center'} mb={'1rem'}>Topic #{subForum.subForumId}</Heading>
                 <Divider mb='2rem'></Divider>
+
+                {
+                    currentUser === subForum.createdBy ?
+                        <Button onClick={handleOnDeleteSubForum}>Delete</Button>
+                        : null
+                }
 
                 <Box backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
                     <Flex direction={'row'}>

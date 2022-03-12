@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import { BsFillBookFill, BsFillPlusSquareFill } from "react-icons/bs";
-import { FaNewspaper } from "react-icons/fa";
+import { FaCompass, FaNewspaper } from "react-icons/fa";
 import { MdArticle } from "react-icons/md";
 import { RiDeleteBack2Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
+import ArticleGrid from "../ArticleGrid/ArticleGrid";
 
 interface Article {
     articleId: number,
@@ -19,12 +20,13 @@ interface Article {
     createdBY: string
 }
 
-function ExplorePublish() {
+function ExplorePublish({ data }: any) {
     const router = useRouter();
     const { isOpen: isShowOpen, onOpen: onShowOpen, onClose: onShowClose } = useDisclosure();
     const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
     const [articles, setArticles] = useState<Article[]>();
     const [selectedArticleId, setSelectedArticleId] = useState<number>(0);
+    const [articlesExplore, setArticlesExplore] = useState<Article[]>(data as Article[]);
 
     const handleOnClickSeeArticles = async () => {
         onShowOpen();
@@ -96,10 +98,29 @@ function ExplorePublish() {
                 icon: 'success',
                 title: 'Article Deleted!',
                 showConfirmButton: true,
-            }).then(() => {
+            }).then(async () => {
                 onDeleteClose();
+                const dataArticleExplore = await getArticleByDateCreatedLastTwenty();
+                setArticlesExplore(dataArticleExplore);
             });
         }
+    }
+
+    async function getArticleByDateCreatedLastTwenty() {
+        const response = await fetch(`/api/article/getArticleByDateCreatedLastTwenty/articleAPI`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
     }
 
     const handleOnCickPublishArticle = () => {
@@ -202,6 +223,14 @@ function ExplorePublish() {
                         </motion.div>
                     </Flex>
                 </Box>
+
+                <Box mt={'5rem'}>
+                    <Heading>Explore <FaCompass></FaCompass></Heading>
+                    <Divider mb={'2rem'}></Divider>
+                    {/* TODO CORREGIR BUG AL BORRAR NO SE RENDERIZA */}
+                    <ArticleGrid data={articlesExplore} />
+                </Box>
+
             </Container>
 
             <Modal onClose={onShowClose} size={'full'} isOpen={isShowOpen}>
