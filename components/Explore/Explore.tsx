@@ -20,6 +20,7 @@ function Explore({ data }: any) {
                 <Heading>Forum Categories <MdForum></MdForum> </Heading>
 
                 <Divider mt={'1rem'} mb='2rem'></Divider>
+
                 {
                     forumCategories?.map((element: ForumCategory, index: number) => (
                         <Link href={`/forums/enterForum/${element.forumCategoryId}`} key={index}>
@@ -30,19 +31,26 @@ function Explore({ data }: any) {
                                 animate={{
                                     type: 'spring',
                                 }}>
-                                <Box mb={'1rem'} cursor={'pointer'} borderRadius={'0.3rem'} shadow={'md'}>
-                                    <Box p='3' backgroundColor={'gray.200'} borderTopRadius={'0.3rem'}>
+                                <Box mb={'2rem'} cursor={'pointer'} borderRadius={'0.3rem'} shadow={'lg'}>
+                                    <Box p='3' backgroundColor={'gray.700'} borderTopRadius={'0.3rem'} color={'white'}>
                                         <Heading size={"lg"} fontWeight={'bold'}>{element.forumCategoryName}</Heading>
                                     </Box>
                                     <Divider borderColor={'black'}></Divider>
                                     <Box p={'2'}>
-                                        <Text fontWeight={'bold'} pl='0.8rem'>{element.forumCategoryDescription}</Text>
+                                        <Text noOfLines={3} fontWeight={'bold'} pl='0.8rem'>{element.forumCategoryDescription}</Text>
+                                    </Box>
+                                    <Box p={'2'} fontWeight='bold'>
+                                        <Box backgroundColor={'gray.200'} color={'black'} borderRadius={'md'} p='2'>
+                                            <Text>Total SubForums: </Text>
+                                            <Text>Total Messages: </Text>
+                                        </Box>
                                     </Box>
                                 </Box>
                             </motion.div>
                         </Link>
                     ))
                 }
+
             </Container>
         </Box>
     )

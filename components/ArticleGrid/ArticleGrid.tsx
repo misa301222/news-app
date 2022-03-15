@@ -49,12 +49,10 @@ function ArticleGrid({ data }: any) {
                                                 </Box>
                                             </Box>
 
-                                            <Box w={'60%'} overflowY={"auto"} p={'3'}>
-                                                <Box h={'7rem'}>
-                                                    <Text color={'white'}>
-                                                        {element.articleParagraph[0] ? element.articleParagraph[0] : null}
-                                                    </Text>
-                                                </Box>
+                                            <Box w={'60%'} p={'3'}>
+                                                <Text noOfLines={6} color={'white'}>
+                                                    {element.articleParagraph[0] ? element.articleParagraph[0] : null}
+                                                </Text>
                                             </Box>
                                         </Flex>
                                     </Box>

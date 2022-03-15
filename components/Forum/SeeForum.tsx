@@ -20,7 +20,8 @@ function SeeForum({ data }: any) {
     const [subForums, setSubForums] = useState<SubForum[]>(data as SubForum[]);
 
     const handleOnClickNewTopic = () => {
-        router.push(`/forums/newSubForum/`);
+        const { forumCategoryId } = router.query;
+        router.push({ pathname: `/forums/newSubForum/`, query: { forumCategoryId: forumCategoryId } })
     }
 
     return (

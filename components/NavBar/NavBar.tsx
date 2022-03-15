@@ -131,6 +131,18 @@ function NavBar(props: any) {
                                 <Text fontWeight={'bold'}>Forums</Text>
                             </Link>
 
+                            <Link
+                                px={2}
+                                py={1}
+                                rounded={'md'}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: useColorModeValue('gray.300', 'gray.700'),
+                                }}
+                                href={`/users/searchUsers`}>
+                                <Text fontWeight={'bold'}>Users</Text>
+                            </Link>
+
                             {session || status === 'loading' ?
                                 null :
                                 <Link

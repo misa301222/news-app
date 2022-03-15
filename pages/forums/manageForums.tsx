@@ -1,8 +1,8 @@
 import { getSession } from "next-auth/react";
-import Settings from "../components/Settings/Settings";
+import ManageForums from "../../components/Forum/ManageForums";
 
-function SettingsPage({ user }: any) {
-    return <Settings data={user} />
+function manageForumsPage({ forumCategories }: any) {
+    return <ManageForums data={forumCategories} />
 }
 
 export async function getServerSideProps(context: any) {
@@ -19,10 +19,8 @@ export async function getServerSideProps(context: any) {
         };
     }
 
-    const { email }: any = session.user;
-
-    const [responseUser] = await Promise.all([
-        fetch(`${process.env.NEXTAUTH_URL}/api/user/getUserByEmail/${email}`, {
+    const [responseForumCategories] = await Promise.all([
+        fetch(`${process.env.NEXTAUTH_URL}/api/forumCategory/forumCategoryAPI`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,13 +29,12 @@ export async function getServerSideProps(context: any) {
         })
     ]);
 
-    const [userR] = await Promise.all([
-        responseUser.json()
+    const [responseFC] = await Promise.all([
+        responseForumCategories.json()
     ]);
 
-    return { props: { user: userR } };
+    return { props: { forumCategories: responseFC } };
 
 }
 
-
-export default SettingsPage;
+export default manageForumsPage;

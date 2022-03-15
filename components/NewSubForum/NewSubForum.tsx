@@ -28,6 +28,7 @@ function NewSubForum({ data }: any) {
     const [imagesURL, setImagesURL] = useState<string[]>([]);
     const [imageURLText, setImageURLText] = useState<string>('');
     const router = useRouter();
+    const { forumCategoryId } = router.query;
 
     const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
@@ -38,7 +39,7 @@ function NewSubForum({ data }: any) {
         subForumImageURL: [''],
         dateCreated: new Date,
         createdBy: '',
-        forumCategoryId: 0
+        forumCategoryId: forumCategoryId ? Number(forumCategoryId) : 0
     });
 
     const handleOnChangeSubForumName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -180,11 +181,11 @@ function NewSubForum({ data }: any) {
                         </Box>
 
                         <Box mb='2rem'>
-                            <Select onChange={(e) => setSubForum(prev => ({ ...prev, forumCategoryId: Number(e.target.value) }))}>
+                            <Select value={subForum.forumCategoryId} onChange={(e) => setSubForum(prev => ({ ...prev, forumCategoryId: Number(e.target.value) }))}>
                                 <option value={0}>Select An Option</option>
                                 {
                                     forumCategories?.map((element: ForumCategory, index: number) => (
-                                        <option key={index} value={element.forumCategoryId}>{element.forumCategoryId} - {element.forumCategoryDescription}</option>
+                                        <option key={index} value={element.forumCategoryId}>{element.forumCategoryId} - {element.forumCategoryName} ({element.forumCategoryDescription})</option>
                                     ))
                                 }
                             </Select>

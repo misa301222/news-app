@@ -83,7 +83,7 @@ function ShowArticle({ data }: any) {
                 <Flex>
                     <Box>
                         <Link href={`/profile/${userProfile.email}`}>
-                            <Image cursor={'pointer'} mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={userProfile.profileImageURL} />
+                            <Image cursor={'pointer'} mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={userProfile.profileImageURL ? userProfile.profileImageURL : '/static/images/Blank.png'} />
                         </Link>
                     </Box>
 

@@ -23,6 +23,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         res.status(201).json(subForums);
     }
+
+    if (req.method === 'DELETE') {
+        const session = await getSession({ req });
+
+        if (!session) {
+            return res.status(400).json({ msg: "Invalid Authentication!" })
+        }
+
+        const { forumCategoryId }: any = req.query;
+
+        let subForums = await prisma.subForum.deleteMany({
+            where: {
+                forumCategoryId: Number(forumCategoryId)
+            }
+        });
+
+        res.status(201).json({ message: 'Deleted!!', ...subForums });
+    }
 }
 
 export default handler;
