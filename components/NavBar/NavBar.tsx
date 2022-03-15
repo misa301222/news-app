@@ -22,6 +22,9 @@ import { ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { IoNewspaper } from 'react-icons/io5';
 import { motion } from 'framer-motion';
+import { FaNewspaper, FaUserCircle } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+import { GrConfigure } from "react-icons/gr";
 
 const Links = ['Home', 'SignIn', 'Login'];
 
@@ -42,12 +45,26 @@ const NavLink = ({ children }: { children: ReactNode }) => (
 function NavBar(props: any) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { data: session, status }: any = useSession();
+    const router = useRouter();
 
     function logoutHandler() {
         localStorage.clear();
         signOut({
             callbackUrl: '/'
         });
+    }
+
+    const handleClickPublish = () => {
+        router.push('/publish/publish');
+    }
+
+    const handleClickProfile = () => {
+        const { email } = session.user;
+        router.push(`/profile/${email}`);
+    }
+
+    const handleClickSettings = () => {
+        router.push('/settings');
     }
 
     return (
@@ -98,11 +115,36 @@ function NavBar(props: any) {
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
                                 }}
+                                href={`/publish/explorePublish`}>
+                                <Text fontWeight={'bold'}>Explore</Text>
+                            </Link>
+
+                            <Link
+                                px={2}
+                                py={1}
+                                rounded={'md'}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: useColorModeValue('gray.300', 'gray.700'),
+                                }}
                                 href={`/forums/explore`}>
                                 <Text fontWeight={'bold'}>Forums</Text>
                             </Link>
 
-                            {!session && (
+                            <Link
+                                px={2}
+                                py={1}
+                                rounded={'md'}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: useColorModeValue('gray.300', 'gray.700'),
+                                }}
+                                href={`/users/searchUsers`}>
+                                <Text fontWeight={'bold'}>Users</Text>
+                            </Link>
+
+                            {session || status === 'loading' ?
+                                null :
                                 <Link
                                     px={2}
                                     py={1}
@@ -113,10 +155,11 @@ function NavBar(props: any) {
                                     }}
                                     href={`/login`}>
                                     Login
-                                </Link>)
+                                </Link>
                             }
 
-                            {!session && (
+                            {session || status === 'loading' ?
+                                null :
                                 <Link
                                     px={2}
                                     py={1}
@@ -127,7 +170,7 @@ function NavBar(props: any) {
                                     }}
                                     href={`/signUp`}>
                                     SignUp
-                                </Link>)
+                                </Link>
                             }
                         </HStack>
                     </HStack>
@@ -148,8 +191,9 @@ function NavBar(props: any) {
                                     />
                                 </MenuButton>
                                 <MenuList>
-                                    <MenuItem>Link 1</MenuItem>
-                                    <MenuItem>Link 2</MenuItem>
+                                    <MenuItem onClick={() => handleClickProfile()} fontWeight={'bold'} fontSize={'md'}><FaUserCircle></FaUserCircle><Text pl={'0.5rem'}>Profile</Text></MenuItem>
+                                    <MenuItem onClick={() => handleClickPublish()} fontWeight={'bold'} fontSize={'md'}><FaNewspaper></FaNewspaper> <Text pl={'0.5rem'}>Publish</Text></MenuItem>
+                                    <MenuItem onClick={() => handleClickSettings()} fontWeight={'bold'} fontSize={'md'}><GrConfigure></GrConfigure> <Text pl={'0.5rem'}>Settings</Text></MenuItem>
                                     <MenuDivider />
                                     <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                                 </MenuList>

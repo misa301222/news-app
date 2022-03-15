@@ -11,18 +11,25 @@ datasource db {
 }
 
 model Users {
-  userId          Int     @unique @default(autoincrement()) @map(name: "user_id")
-  fullName        String  @map(name: "full_name")
-  email           String  @map(name: "email")
-  password        String  @map(name: "password")
-  privateProfile  Boolean @map(name: "private_profile")
-  profileImageURL String  @map(name: "profile_image_url")
-  coverImageURL   String  @map(name: "cover_image_url")
-  totalPosts      Int     @map(name: "total_posts")
-  totalMessages   Int     @map(name: "total_messages")
-  role            Int     @map(name: "role")
+  userId   Int    @unique @default(autoincrement()) @map(name: "user_id")
+  fullName String @map(name: "full_name")
+  email    String @map(name: "email")
+  password String @map(name: "password")
+  role     Int    @map(name: "role")
 
   @@map("users")
+}
+
+model UserProfile {
+  email           String  @unique @map("email")
+  profileImageURL String  @map("profile_image_url")
+  coverImageURL   String  @map("cover_image_url")
+  aboutMe         String  @map("about_me")
+  privateProfile  Boolean @map("private_profile")
+  totalPosts      Int     @map("total_posts")
+  totalMessages   Int     @map("total_messages")
+
+  @@map("user_profile")
 }
 
 model Roles {
@@ -33,8 +40,43 @@ model Roles {
 }
 
 model ForumCategory {
-  forumCategoryId   Int    @unique @default(autoincrement()) @map(name: "forum_category_id")
-  forumCategoryName String @map(name: "forum_category_name")
+  forumCategoryId          Int    @unique @default(autoincrement()) @map(name: "forum_category_id")
+  forumCategoryName        String @map(name: "forum_category_name")
+  forumCategoryDescription String @map("forum_category_description")
 
   @@map("forum_category")
+}
+
+model SubForum {
+  subForumId          Int      @unique @default(autoincrement()) @map("sub_forum_id")
+  subForumName        String   @map("sub_forum_name")
+  subForumDescription String   @map("sub_forum_description")
+  subForumImageURL    String[] @map("sub_forum_image_url")
+  dateCreated         DateTime @map("date_created")
+  createdBy           String   @map("created_by")
+  forumCategoryId     Int      @map("forum_category_id")
+
+  @@map("sub_forum")
+}
+
+model SubForumReply {
+  subForumReplyId          Int    @unique @default(autoincrement()) @map("sub_forum_reply_id")
+  subForumReplyDescription String @map("sub_forum_reply_description")
+  createdBy                String @map("created_by")
+  subForumId               Int    @map("sub_forum_id")
+
+  @@map("sub_forum_reply")
+}
+
+model Article {
+  articleId           Int      @unique @default(autoincrement()) @map("article_id")
+  articleHeader       String   @map("article_header")
+  articleSubHeader    String   @map("article_sub_header")
+  articleMainImageURL String[] @map("article_main_image_url")
+  articleParagraph    String[] @map("article_paragraph")
+  articleImageURL     String[] @map("article_image_url")
+  datePublished       DateTime @map("date_published")
+  createdBy           String   @map("created_by")
+
+  @@map("article")
 }
