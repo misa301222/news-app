@@ -1,5 +1,5 @@
 import { Box, Divider, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import Link from "next/link";
 
@@ -16,6 +16,11 @@ interface Article {
 
 function ArticleGrid({ data }: any) {
     const [articles, setArticles] = useState<Article[]>(data as Article[]);
+
+    useEffect(() => {
+        console.log('data changed');
+        setArticles(data as Article[]);
+    }, [data]);
 
     return (
         <Box>

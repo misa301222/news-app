@@ -6,6 +6,7 @@ import { AiOutlineComment } from "react-icons/ai";
 import { BsFilePost } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
 import Swal from "sweetalert2";
+import Router from 'next/router';
 
 interface UserProfile {
     email: string,
@@ -24,60 +25,74 @@ interface User {
     role: number
 }
 
-function ReplyCard({ index, subForumReply }: any) {
+function ReplyCard({ data }: any) {
     const [userProfile, setUserProfile] = useState<UserProfile>();
     const [user, setUser] = useState<User>();
     const [currentUser, setCurrentUser] = useState<string>('');
 
     const getUserProfileByEmail = async () => {
-        const response = await fetch(`/api/userProfile/getUserProfileByEmail/${subForumReply.createdBy}`, {
+        const response = await fetch(`/api/userProfile/getUserProfileByEmail/${data.createdBy}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
             method: 'GET',
         });
 
-        const data = await response.json();
+        const dataResponse = await response.json();
 
-        if (data) {
-            setUserProfile(data);
+        if (dataResponse) {
+            setUserProfile(dataResponse);
         }
     }
 
     const getUserByEmail = async () => {
-        const response = await fetch(`/api/user/getUserByEmail/${subForumReply.createdBy}`, {
+        const response = await fetch(`/api/user/getUserByEmail/${data.createdBy}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
             method: 'GET',
         });
 
-        const data = await response.json();
+        const dataResponse = await response.json();
 
-        if (data) {
-            setUser(data);
+        if (dataResponse) {
+            setUser(dataResponse);
         }
     }
 
     const deleteSubForumReplyById = async () => {
-        const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumReplyId/${subForumReply.subForumReplyId}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'DELETE',
+        let subForumId: number = data.subForumId;
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete your comment?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumReplyId/${data.subForumReplyId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    method: 'DELETE',
+                });
+
+                const dataResponse = await response.json();
+                if (dataResponse) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'Message Deleted Successfully!',
+                        showConfirmButton: true,
+                    }).then(async () => {
+                        Router.reload();
+                    });
+                }
+            }
         });
-
-        const data = await response.json();
-        if (data) {
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Message Deleted Successfully!',
-                showConfirmButton: true,
-            }).then(async () => {
-
-            });
-        }
     }
 
     useEffect(() => {
@@ -87,98 +102,102 @@ function ReplyCard({ index, subForumReply }: any) {
     }, []);
 
     return (
-        <Flex direction={'row'}>
-            <Box w={'20%'}>
-                <Flex direction={'column'} justifyContent={'center'}>
-
-                    <motion.div
-                        style={{
-                            marginBottom: '1rem'
-                        }}
-                        whileHover={{
-                            scale: 1.1,
-                            color: '#F56565'
-                        }}
-                        animate={{
-                            type: 'spring'
-                        }}>
-                        <Link href={`/profile/${subForumReply.createdBy}`}>
-                            <Heading isTruncated cursor={'pointer'} textAlign={'center'} fontSize={'xl'}>{user?.fullName}</Heading>
-                        </Link>
-                    </motion.div>
-
-
-                    <Img src={`${userProfile?.profileImageURL ? userProfile.profileImageURL : '/static/images/Blank.png'}`} maxW={'8rem'} borderRadius={'xl'}
-                        shadow='lg' mx='auto' />
-
-                    <Box p='2' border={"1px"} borderRadius={'xl'} mt={'2rem'} backgroundColor={'gray.50'} color={'black'}>
-                        <Flex direction={'row'}>
-                            <Box w={'10%'}>
-                                <MdEmail></MdEmail>
-                            </Box>
-
-                            <Box w={'35%'}>
-                                <Heading textAlign={'end'} fontSize={'sm'}> Email:</Heading>
-                            </Box>
-
-                            <Box w={'55%'}>
-                                <Heading fontSize={'sm'} fontWeight={'normal'} isTruncated>&nbsp;{user?.email}</Heading>
-                            </Box>
-                        </Flex>
-
-                        <Flex direction={'row'}>
-                            <Box w={'10%'}>
-                                <BsFilePost></BsFilePost>
-                            </Box>
-                            <Box w={'35%'}>
-                                <Heading textAlign={'end'} fontSize={'sm'}>Posts:</Heading>
-                            </Box>
-
-                            <Box w={'55%'}>
-                                <Heading fontSize={'sm'} fontWeight={'normal'} isTruncated>&nbsp;{userProfile?.totalPosts}</Heading>
-                            </Box>
-                        </Flex>
-
-                        <Flex direction={'row'}>
-                            <Box w={'10%'}>
-                                <AiOutlineComment></AiOutlineComment>
-                            </Box>
-                            <Box w={'35%'}>
-                                <Heading textAlign={'end'} fontSize={'sm'}> Messages:</Heading>
-                            </Box>
-
-                            <Box w={'55%'}>
-                                <Heading fontSize={'sm'} fontWeight={'normal'} isTruncated>&nbsp;{userProfile?.totalMessages}</Heading>
-                            </Box>
-                        </Flex>
+        <Box mb={'2rem'} border={'1px'} p='5' borderColor={'gray.200'} borderRadius={'xl'} shadow={'lg'}>
+            {
+                userProfile?.email === currentUser ?
+                    <Box textAlign={'end'}>
+                        <Button bgColor={'red.500'} _hover={{ bgColor: 'red.700' }} type="button" onClick={deleteSubForumReplyById}>X</Button>
                     </Box>
-                </Flex>
-            </Box>
+                    : null
+            }
+            <Flex direction={'row'}>
+                <Box w={'20%'}>
+                    <Flex direction={'column'} justifyContent={'center'}>
+                        <motion.div
+                            style={{
+                                marginBottom: '1rem',
+                                color: 'black'
+                            }}
+                            whileHover={{
+                                scale: 1.1,
+                                color: '#F56565'
+                            }}
+                            animate={{
+                                type: 'spring'
+                            }}>
+                            <Link href={`/profile/${data.createdBy}`}>
+                                <Heading isTruncated cursor={'pointer'} textAlign={'center'} fontSize={'xl'}>{user?.fullName}</Heading>
+                            </Link>
+                        </motion.div>
 
-            <Stack direction='row' h='300px' p={4} borderColor={'black'}>
-                <Divider orientation='vertical' />
-            </Stack>
 
-            <Box w={'80%'}>
-                <Container maxW={'container.md'}>
-                    <Flex direction={'column'} p='2'>
-                        <Box mb={'2rem'}>
-                            <Heading textAlign={'center'} fontSize={'xl'} isTruncated></Heading>
+                        <Img src={`${userProfile?.profileImageURL ? userProfile.profileImageURL : '/static/images/Blank.png'}`} maxW={'8rem'} borderRadius={'xl'}
+                            shadow='lg' mx='auto' />
+
+                        <Box p='2' border={"1px"} borderRadius={'xl'} mt={'2rem'} backgroundColor={'gray.50'} color={'black'}>
+                            <Flex direction={'row'}>
+                                <Box w={'10%'}>
+                                    <MdEmail></MdEmail>
+                                </Box>
+
+                                <Box w={'35%'}>
+                                    <Heading textAlign={'end'} fontSize={'xs'}> Email:</Heading>
+                                </Box>
+
+                                <Box w={'55%'}>
+                                    <Heading fontSize={'xs'} fontWeight={'normal'} isTruncated>&nbsp;{user?.email}</Heading>
+                                </Box>
+                            </Flex>
+
+                            <Flex direction={'row'}>
+                                <Box w={'10%'}>
+                                    <BsFilePost></BsFilePost>
+                                </Box>
+                                <Box w={'35%'}>
+                                    <Heading textAlign={'end'} fontSize={'xs'}>Posts:</Heading>
+                                </Box>
+
+                                <Box w={'55%'}>
+                                    <Heading fontSize={'xs'} fontWeight={'normal'} isTruncated>&nbsp;{userProfile?.totalPosts}</Heading>
+                                </Box>
+                            </Flex>
+
+                            <Flex direction={'row'}>
+                                <Box w={'10%'}>
+                                    <AiOutlineComment></AiOutlineComment>
+                                </Box>
+                                <Box w={'35%'}>
+                                    <Heading textAlign={'end'} fontSize={'xs'}> Messages:</Heading>
+                                </Box>
+
+                                <Box w={'55%'}>
+                                    <Heading fontSize={'xs'} fontWeight={'normal'} isTruncated>&nbsp;{userProfile?.totalMessages}</Heading>
+                                </Box>
+                            </Flex>
                         </Box>
-
-                        <Box>
-                            <Text>{subForumReply.subForumReplyDescription}</Text>
-                        </Box>
-
                     </Flex>
-                </Container>
-                {
-                    userProfile?.email === currentUser ?
-                        <Button type="button" onClick={deleteSubForumReplyById}>Delete</Button>
-                        : null
-                }
-            </Box>
-        </Flex>
+                </Box>
+
+                <Stack direction='row' h='300px' p={4} borderColor={'black'}>
+                    <Divider orientation='vertical' />
+                </Stack>
+
+                <Box w={'80%'}>
+                    <Container maxW={'container.md'}>
+                        <Flex direction={'column'} p='2'>
+                            <Box mb={'2rem'}>
+                                <Heading textAlign={'center'} fontSize={'xl'} isTruncated></Heading>
+                            </Box>
+
+                            <Box color={'black'}>
+                                <Text>{data.subForumReplyDescription}</Text>
+                            </Box>
+
+                        </Flex>
+                    </Container>
+                </Box>
+            </Flex>
+        </Box>
     )
 }
 

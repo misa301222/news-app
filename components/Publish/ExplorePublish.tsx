@@ -225,9 +225,8 @@ function ExplorePublish({ data }: any) {
                 </Box>
 
                 <Box mt={'5rem'}>
-                    <Heading>Explore <FaCompass></FaCompass></Heading>
+                    <Heading textAlign={'center'} mb={'1rem'}>Explore <FaCompass></FaCompass></Heading>
                     <Divider mb={'2rem'}></Divider>
-                    {/* TODO CORREGIR BUG AL BORRAR NO SE RENDERIZA */}
                     <ArticleGrid data={articlesExplore} />
                 </Box>
 

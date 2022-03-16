@@ -291,7 +291,7 @@ function Publish() {
                         </Box>
 
                         <Box mb='2rem' textAlign={'center'}>
-                            <Button type="submit" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}>Submit</Button>
+                            <Button disabled={!article.articleHeader} type="submit" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}>Submit</Button>
                         </Box>
                     </form>
                 </Box>

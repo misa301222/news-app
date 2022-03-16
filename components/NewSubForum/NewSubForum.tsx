@@ -139,7 +139,7 @@ function NewSubForum({ data }: any) {
                     title: 'SubForum Created Successfully!',
                     showConfirmButton: true,
                 }).then(() => {
-                    router.push('/forums/explore');
+                    router.push(`/forums/enterForum/${response.forumCategoryId}`);
                 });
             });
         }

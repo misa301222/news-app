@@ -22,9 +22,12 @@ import { ReactNode } from 'react';
 import { signOut, useSession } from 'next-auth/react';
 import { IoNewspaper } from 'react-icons/io5';
 import { motion } from 'framer-motion';
-import { FaNewspaper, FaUserCircle } from 'react-icons/fa';
+import { FaCompass, FaNewspaper, FaUserAlt, FaUserCircle } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { GrConfigure } from "react-icons/gr";
+import { MdForum } from 'react-icons/md';
+import { ImHome } from 'react-icons/im';
+import { RiArticleFill } from 'react-icons/ri';
 
 const Links = ['Home', 'SignIn', 'Login'];
 
@@ -69,7 +72,7 @@ function NavBar(props: any) {
 
     return (
         <>
-            <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+            <Box bg={useColorModeValue('gray.200', 'gray.900')} px={4} shadow='sm'>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <IconButton
                         size={'md'}
@@ -104,7 +107,7 @@ function NavBar(props: any) {
                                     bg: useColorModeValue('gray.300', 'gray.700'),
                                 }}
                                 href={`/`}>
-                                <Text fontWeight={'bold'}>Home</Text>
+                                <Text fontWeight={'bold'}><ImHome></ImHome>Home</Text>
                             </Link>
 
                             <Link
@@ -116,7 +119,7 @@ function NavBar(props: any) {
                                     bg: useColorModeValue('gray.300', 'gray.700'),
                                 }}
                                 href={`/publish/explorePublish`}>
-                                <Text fontWeight={'bold'}>Explore</Text>
+                                <Text fontWeight={'bold'}><FaCompass></FaCompass>Explore</Text>
                             </Link>
 
                             <Link
@@ -128,7 +131,7 @@ function NavBar(props: any) {
                                     bg: useColorModeValue('gray.300', 'gray.700'),
                                 }}
                                 href={`/forums/explore`}>
-                                <Text fontWeight={'bold'}>Forums</Text>
+                                <Text fontWeight={'bold'}><MdForum></MdForum>Forums</Text>
                             </Link>
 
                             <Link
@@ -140,7 +143,19 @@ function NavBar(props: any) {
                                     bg: useColorModeValue('gray.300', 'gray.700'),
                                 }}
                                 href={`/users/searchUsers`}>
-                                <Text fontWeight={'bold'}>Users</Text>
+                                <Text fontWeight={'bold'}><FaUserAlt></FaUserAlt>Users</Text>
+                            </Link>
+
+                            <Link
+                                px={2}
+                                py={1}
+                                rounded={'md'}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: useColorModeValue('gray.300', 'gray.700'),
+                                }}
+                                href={`/article/searchArticle`}>
+                                <Text fontWeight={'bold'}><RiArticleFill></RiArticleFill>Articles</Text>
                             </Link>
 
                             {session || status === 'loading' ?

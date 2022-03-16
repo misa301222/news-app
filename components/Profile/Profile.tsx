@@ -1,5 +1,5 @@
 import { Box, Container, Divider, Flex, Heading, Image, Text } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -36,10 +36,6 @@ function Profile({ data }: any) {
     const [userProfile] = useState<UserProfile>(data.userProfile);
     const [articles] = useState<Article[]>(data.article);
     const [isPrivateProfile] = useState<boolean>(data.userProfile.privateProfile);
-
-    useEffect(() => {
-        console.log(userProfile);
-    }, [])
 
     return (
         <Box>
@@ -97,12 +93,12 @@ function Profile({ data }: any) {
                             }
                         </Box>
 
-                        <Box w={'90%'} h={'19rem'} bgColor={'gray.700'} p={'5'} shadow={"dark-lg"} mb={'8rem'}>
+                        <Box w={'90%'} minH={'19rem'} bgColor={'gray.700'} p={'5'} shadow={"dark-lg"} mb={'8rem'}>
                             <Heading textAlign={'center'}>Published Articles</Heading>
                             <Divider></Divider>
                             <Container maxW={'container.lg'} mt={'3rem'}>
                                 {
-                                    <Flex wrap={'wrap'}>
+                                    <Flex wrap={'wrap'} gap={'3rem'} p='3' justifyContent={'center'}>
                                         {
                                             !isPrivateProfile ?
                                                 articles ?
@@ -110,7 +106,7 @@ function Profile({ data }: any) {
                                                         <Link key={index} href={`/article/${element.articleId}`}>
                                                             <motion.div
                                                                 style={{
-                                                                    backgroundImage: `${element.articleMainImageURL[0] ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${element.articleMainImageURL[0]})` : ''}`,
+                                                                    backgroundImage: `${element.articleMainImageURL[0] ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${JSON.stringify(element.articleMainImageURL[0])})` : ''}`,
                                                                     backgroundRepeat: 'no-repeat',
                                                                     backgroundPosition: `${element.articleMainImageURL[0] ? 'cover' : ''}`,
                                                                     backgroundSize: `${element.articleMainImageURL[0] ? 'cover' : ''}`,
