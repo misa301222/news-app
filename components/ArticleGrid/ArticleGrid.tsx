@@ -35,33 +35,39 @@ function ArticleGrid({ data }: any) {
                                 type: 'spring'
                             }}
                             style={{
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                borderRadius: '13px',
+                                height: '17rem',
+                                width: '30rem',
+                                padding: '2',
+                                boxShadow: '0 .5rem 1rem',
+                                backgroundColor: '#2D3748'
                             }}
                         >
                             <Link href={`/article/${element.articleId}`}>
-                                <Box bgColor={"gray.700"} p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'}>
-                                    <Box p='2'>
-                                        <Box bg={""} h={'3rem'} borderRadius={"lg"}>
-                                            <Heading isTruncated color={'red.300'} textAlign={'center'}>{element.articleHeader}</Heading>
-                                        </Box>
-                                        <Divider></Divider>
-                                        <Flex mt={'1rem'}>
-                                            <Box w={'40%'}>
-                                                <Box>
-                                                    {element.articleMainImageURL[0] ?
-                                                        <Image mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={element.articleMainImageURL[0]} alt='ArticleMainImage' />
-                                                        : null}
-                                                </Box>
-                                            </Box>
 
-                                            <Box w={'60%'} p={'3'}>
-                                                <Text noOfLines={6} color={'white'}>
-                                                    {element.articleParagraph[0] ? element.articleParagraph[0] : null}
-                                                </Text>
-                                            </Box>
-                                        </Flex>
+                                <Box p='2'>
+                                    <Box bg={""} h={'3rem'} borderRadius={"lg"}>
+                                        <Heading isTruncated color={'red.300'} textAlign={'center'}>{element.articleHeader}</Heading>
                                     </Box>
+                                    <Divider></Divider>
+                                    <Flex mt={'1rem'}>
+                                        <Box w={'40%'}>
+                                            <Box>
+                                                {element.articleMainImageURL[0] ?
+                                                    <Image mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={element.articleMainImageURL[0]} alt='ArticleMainImage' />
+                                                    : null}
+                                            </Box>
+                                        </Box>
+
+                                        <Box w={'60%'} p={'3'}>
+                                            <Text noOfLines={6} color={'white'}>
+                                                {element.articleParagraph[0] ? element.articleParagraph[0] : null}
+                                            </Text>
+                                        </Box>
+                                    </Flex>
                                 </Box>
+
                             </Link>
                         </motion.div>
                     ))

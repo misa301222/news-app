@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import ReplyCard from "../ReplyCard/ReplyCard";
 import { useRouter } from "next/router";
 import PaginationSubForumReply from "../Pagination/PaginationSubForumReply";
+import { useSession } from "next-auth/react";
 
 interface SubForum {
     subForumId: number,
@@ -54,6 +55,7 @@ function SeeSubForum({ data }: any) {
     const [currentUser, setCurrentUser] = useState<string>('');
     const router = useRouter();
     const [selectedImage, setSelectedImage] = useState<string>('');
+    const { data: session, status }: any = useSession();
 
     const { isOpen: isNewReplyOpen, onOpen: onNewReplyOpen, onClose: OnNewReplyClose } = useDisclosure();
     const { isOpen: isViewImageOpen, onOpen: onViewImageOpen, onClose: onViewImageClose } = useDisclosure();
@@ -100,6 +102,29 @@ function SeeSubForum({ data }: any) {
         return data;
     }
 
+    async function updateUserProfile(email: string) {
+        const response = await fetch(`/api/userProfile/post/addMessageCount/${email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const addPlusOneMessage = async () => {
+        const { email } = session.user;
+
+        const response = await updateUserProfile(email);
+    }
+
     const handleOnSubmitNewReply = async (event: SyntheticEvent) => {
         event.preventDefault();
         let currentUser = localStorage.getItem('email')!;
@@ -110,7 +135,6 @@ function SeeSubForum({ data }: any) {
                 subForumId: subForum.subForumId
             }
 
-            //console.log(newReplyEntity);
             await saveNewReply(newReplyEntity).then(response => {
                 if (response) {
                     Swal.fire({
@@ -120,6 +144,7 @@ function SeeSubForum({ data }: any) {
                         showConfirmButton: true,
                     }).then(async () => {
                         OnNewReplyClose();
+                        await addPlusOneMessage();
                         await getSubForumsReplies();
                     });
                 }

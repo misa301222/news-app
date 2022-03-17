@@ -4,6 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import { motion } from 'framer-motion';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
+import { BsFillPenFill } from "react-icons/bs";
 
 interface Article {
     articleId: number,
@@ -70,51 +71,65 @@ function ShowArticle({ data }: any) {
             </Container>
 
             <Container maxW={'container.md'} mt='10rem'>
-                <Heading mb='2rem' textAlign={'center'}>Author</Heading>
+                <Heading mb='2rem' textAlign={'center'}>Author <BsFillPenFill></BsFillPenFill></Heading>
                 <Divider borderColor={'black'}></Divider>
             </Container>
 
-            <Container maxW={'container.md'} mt={'2rem'} mb={'10rem'} backgroundColor={'gray.700'} p='5' shadow={'dark-lg'} style={{
-                backgroundImage: `${userProfile.coverImageURL ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${userProfile.coverImageURL})` : ''}`,
-                backgroundPosition: `${userProfile.coverImageURL ? 'cover' : ''}`,
-                backgroundRepeat: `${userProfile.coverImageURL ? 'no-repeat' : ''}`,
-                backgroundSize: `${userProfile.coverImageURL ? 'cover' : ''}`
-            }}>
-                <Flex>
-                    <Box>
-                        <Link href={`/profile/${userProfile.email}`}>
-                            <Image cursor={'pointer'} mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={userProfile.profileImageURL ? userProfile.profileImageURL : '/static/images/Blank.png'} />
-                        </Link>
-                    </Box>
-
-                    <Center height={'10rem'} pl='2rem'>
-                        <Divider orientation="vertical" borderColor={'white'}></Divider>
-                    </Center>
-
-                    <Box ml={'2rem'}>
-                        <motion.div
-                            whileHover={{
-                                scale: 1.1,
-                                color: '#C53030'
-                            }}
-                            animate={{
-                                type: 'spring'
-                            }}
-                            style={{
-                                cursor: 'pointer',
-                                color: '#FC8181'
-                            }}>
+            <motion.div
+                initial={{
+                    opacity: 0.5,
+                    translateX: '5rem'
+                }}
+                whileInView={{
+                    opacity: 1,
+                    translateX: '0rem'
+                }}
+                style={{
+                    width: '50%',
+                    margin: '0 auto'
+                }}>
+                <Container maxW={'container.md'} mt={'2rem'} mb={'10rem'} backgroundColor={'gray.700'} p='5' shadow={'dark-lg'} style={{
+                    backgroundImage: `${userProfile.coverImageURL ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${userProfile.coverImageURL})` : ''}`,
+                    backgroundPosition: `${userProfile.coverImageURL ? 'cover' : ''}`,
+                    backgroundRepeat: `${userProfile.coverImageURL ? 'no-repeat' : ''}`,
+                    backgroundSize: `${userProfile.coverImageURL ? 'cover' : ''}`
+                }}>
+                    <Flex>
+                        <Box>
                             <Link href={`/profile/${userProfile.email}`}>
-                                <Heading color={''}>
-                                    {user.fullName}
-                                </Heading>
+                                <Image cursor={'pointer'} mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={userProfile.profileImageURL ? userProfile.profileImageURL : '/static/images/Blank.png'} />
                             </Link>
-                        </motion.div>
+                        </Box>
 
-                        <Heading color={'white'} fontSize={'xl'}> {userProfile.email} </Heading>
-                    </Box>
-                </Flex>
-            </Container>
+                        <Center height={'10rem'} pl='2rem'>
+                            <Divider orientation="vertical" borderColor={'white'}></Divider>
+                        </Center>
+
+                        <Box ml={'2rem'}>
+                            <motion.div
+                                whileHover={{
+                                    scale: 1.1,
+                                    color: '#C53030'
+                                }}
+                                animate={{
+                                    type: 'spring'
+                                }}
+                                style={{
+                                    cursor: 'pointer',
+                                    color: '#FC8181'
+                                }}>
+                                <Link href={`/profile/${userProfile.email}`}>
+                                    <Heading color={''}>
+                                        {user.fullName}
+                                    </Heading>
+                                </Link>
+                            </motion.div>
+
+                            <Heading color={'white'} fontSize={'xl'}> {userProfile.email} </Heading>
+                        </Box>
+                    </Flex>
+                </Container>
+            </motion.div>
         </Box>
     )
 }

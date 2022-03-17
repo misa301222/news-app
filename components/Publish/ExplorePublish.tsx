@@ -139,9 +139,20 @@ function ExplorePublish({ data }: any) {
                             whileHover={{
                                 scale: 1.1
                             }}
+                            initial={{
+                                opacity: 0.8,
+                                translateX: '1.5rem'
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: '0rem',
+                                transition: {
+                                    type: 'spring',
+                                    duration: 1
+                                }
+                            }}
                             animate={{
-                                type: 'spring'
-
+                                type: 'spring',
                             }}
                             onClick={() => handleOnCickPublishArticle()}
                         >
@@ -172,6 +183,18 @@ function ExplorePublish({ data }: any) {
                                 type: 'spring'
 
                             }}
+                            initial={{
+                                opacity: 0.8,
+                                translateX: '1.5rem'
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: '0rem',
+                                transition: {
+                                    type: 'spring',
+                                    duration: 1
+                                }
+                            }}
                             onClick={async () => handleOnClickSeeArticles()}
                         >
                             <Box p='1' bgColor={'gray.700'} color={'white'} borderRadius={"xl"} w={'22rem'} h={'8rem'} shadow={'dark-lg'}>
@@ -201,6 +224,18 @@ function ExplorePublish({ data }: any) {
                                 type: 'spring'
 
                             }}
+                            initial={{
+                                opacity: 0.8,
+                                translateX: '1.5rem'
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: '0rem',
+                                transition: {
+                                    type: 'spring',
+                                    duration: 1
+                                }
+                            }}
                             onClick={async () => handleOnClickDeleteArticles()}
                         >
                             <Box p='1' bgColor={'gray.700'} color={'white'} borderRadius={"xl"} w={'22rem'} h={'8rem'} shadow={'dark-lg'}>
@@ -224,9 +259,12 @@ function ExplorePublish({ data }: any) {
                     </Flex>
                 </Box>
 
-                <Box mt={'5rem'}>
+                <Box mt={'5rem'} mb={'10rem'}>
                     <Heading textAlign={'center'} mb={'1rem'}>Explore <FaCompass></FaCompass></Heading>
                     <Divider mb={'2rem'}></Divider>
+                    <Box mb={'1rem'} textAlign={'end'}>
+                        <Button onClick={() => router.push('/article/searchArticle')} color='white' bgColor={'red.400'} _hover={{ bgColor: 'red.500' }} shadow='md'>Search Articles</Button>
+                    </Box>
                     <ArticleGrid data={articlesExplore} />
                 </Box>
 

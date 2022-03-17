@@ -91,6 +91,29 @@ function NewSubForum({ data }: any) {
         setImagesURL(newArray);
     }
 
+    async function updateUserProfile(email: string) {
+        const response = await fetch(`/api/userProfile/post/addPostCount/${email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const addPlusOnePost = async () => {
+        const { email } = session.user;
+
+        const response = await updateUserProfile(email);
+    }
+
     async function saveSubTopic(subForum: SubForum) {
         const response = await fetch(`/api/subForum/subForumAPI`, {
             method: 'POST',
@@ -138,7 +161,8 @@ function NewSubForum({ data }: any) {
                     icon: 'success',
                     title: 'SubForum Created Successfully!',
                     showConfirmButton: true,
-                }).then(() => {
+                }).then(async () => {
+                    await addPlusOnePost();
                     router.push(`/forums/enterForum/${response.forumCategoryId}`);
                 });
             });

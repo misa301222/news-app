@@ -7,11 +7,52 @@ import { MdForum } from 'react-icons/md';
 interface ForumCategory {
     forumCategoryId: number,
     forumCategoryName: string,
-    forumCategoryDescription: string
+    forumCategoryDescription: string,
+    totalSubForums?: number,
 }
 
 function Explore({ data }: any) {
     const [forumCategories, setForumCategories] = useState<ForumCategory[]>(data);
+
+    async function getTotalSubForums(forumCategoryId: number) {
+        const response = await fetch(`/api/subForum/getTotalSubForumsByForumCategoryId/${forumCategoryId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const getTotals = async () => {
+        let forums: ForumCategory[] = [];
+        for (let i = 0; i < forumCategories.length; i++) {
+            const responseMessage = await getTotalSubForums(forumCategories[i].forumCategoryId);
+            forums[i] = forumCategories[i];
+            forums[i].totalSubForums = responseMessage._count;
+        }
+
+        setForumCategories(forums);
+    }
+
+    useEffect(() => {
+        // Some synchronous code.
+
+        (async () => {
+            await getTotals();
+        })();
+
+        return () => {
+            // Component unmount code.
+        };
+    }, []);
 
     return (
         <Box mt={"2rem"}>
@@ -41,8 +82,7 @@ function Explore({ data }: any) {
                                     </Box>
                                     <Box p={'2'} fontWeight='bold'>
                                         <Box backgroundColor={'gray.200'} color={'black'} borderRadius={'md'} p='2'>
-                                            <Text>Total SubForums: </Text>
-                                            <Text>Total Messages: </Text>
+                                            <Text>Total SubForums: {element.totalSubForums}</Text>
                                         </Box>
                                     </Box>
                                 </Box>

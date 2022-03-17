@@ -1,5 +1,6 @@
 import { Box, Button, Container, Divider, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
+import moment from "moment";
 import Link from "next/link";
 
 function SubForumCard({ data }: any) {
@@ -26,6 +27,7 @@ function SubForumCard({ data }: any) {
                         <Heading fontSize={'2xl'} color={'red.300'} isTruncated>{data.subForumName}</Heading>
                         <Text fontWeight={'bold'} isTruncated>- {data.subForumDescription}</Text>
                         <Text fontStyle={'italic'}>SubForum Created by: {data.createdBy}</Text>
+                        <Text fontStyle={'italic'}>Created In: {moment(data.dateCreated).format('MM/DD/YYYY')}</Text>
                         <Text>({data.subForumImageURL.length}) Image(s)</Text>
                     </Box>
 

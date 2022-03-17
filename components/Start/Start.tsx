@@ -1,4 +1,4 @@
-import { Box, Container, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Container, Divider, Flex, Heading, Img, Text } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { motion } from 'framer-motion';
 import { FaNewspaper } from "react-icons/fa";
@@ -32,7 +32,7 @@ function Start() {
                         translateX: '5rem',
                         opacity: 0.5
                     }}
-                    animate={{
+                    whileInView={{
                         translateX: '0rem',
                         opacity: 1,
                         transition: {
@@ -76,11 +76,49 @@ function Start() {
                 </motion.div>
             </Box>
 
-            <Container maxW={'container.xl'} mt={'2rem'}>
-                    <Heading textAlign={'center'}>Welcome to our vast Database of Information!</Heading>
+            <Container maxW={'container.xl'} mt={'2rem'} mb={'10rem'}>
+                <Heading mb={'1rem'} textAlign={'center'}>Welcome to our vast Database of Information!</Heading>
+                <Divider borderColor={'black'} mb={'5rem'}></Divider>
 
+                <motion.div
+                    style={{
+                        width: '80rem',
+                        height: '30rem',
+                        boxShadow: '0 .5rem 1rem black',
+                        margin: '0 auto'
+                    }}
+                    initial={{
+                        translateX: '5rem',
+                        opacity: 0.5
+                    }}
+                    whileInView={{
+                        translateX: '0rem',
+                        opacity: 1,
+                        transition: {
+                            duration: 2,
+                            delay: 0.3,
+                            type: 'spring',
+                        }
+                    }}
+                >
+                    <Flex h={'30rem'}>
+                        <Box w={'35%'}>
+                            <Img h={'100%'} bgSize={'cover'} src='static/images/News.jpg' />
+                        </Box>
 
+                        <Box w={'65%'} p={'5'} alignItems={'stretch'}>
+                            <Heading textAlign={'center'}>We love to Know Things</Heading>
+                            <Divider borderColor={'black'} mb={'2rem'}></Divider>
+                            <Flex direction={'column'} alignItems={'center'}>
+                                <Text fontWeight={'bold'}>So We Obiously think everyone need to know.</Text>
+                            </Flex>
+                        </Box>
+                    </Flex>
+                </motion.div>
+            </Container>
 
+            <Container maxW={'container.xl'} mt={'2rem'} mb={'10rem'}>
+                {/* TODO GET SOME ARTICLES AND SHOW THEM HERE */}
             </Container>
 
         </Box >
