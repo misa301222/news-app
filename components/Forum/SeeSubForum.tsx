@@ -2,7 +2,7 @@ import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Image, Img, 
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { BsFilePost } from "react-icons/bs";
 import { MdEmail } from "react-icons/md";
-import { AiOutlineComment } from 'react-icons/ai';
+import { AiFillLock, AiOutlineComment } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import Link from "next/link";
 import { BiImage, BiMessageDetail } from 'react-icons/bi'
@@ -19,6 +19,7 @@ interface SubForum {
     subForumImageURL: string[],
     dateCreated: Date,
     createdBy: string,
+    isOpen: boolean,
     forumCategoryId: number
 }
 
@@ -332,7 +333,7 @@ function SeeSubForum({ data }: any) {
                     subForum.subForumImageURL[0] ?
                         <Box mt={'2rem'} backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
                             <Heading mb='2rem' textAlign={'center'}>Attached Images</Heading>
-                            <Flex direction={'row'} gap={'2rem'} overflowX={'auto'} justifyContent={'center'}>
+                            <Flex direction={'row'} gap={'2rem'} overflowX={'auto'} justifyContent={'center'} overflowY={'auto'}>
                                 {
                                     subForum.subForumImageURL?.map((element: string, index: number) => (
                                         <Img onClick={() => handleOnClickImage(element)} key={index} src={element} maxH={'10rem'} cursor={'pointer'} />
@@ -345,21 +346,35 @@ function SeeSubForum({ data }: any) {
 
                 <Divider borderColor={'black'} mt={'2rem'}></Divider>
 
-                <Box textAlign={'end'} mt={'1rem'}>
-                    <Button onClick={onNewReplyOpen} type="button" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}><BiMessageDetail></BiMessageDetail>Reply</Button>
-                </Box>
+                {
+                    subForum.isOpen ?
+                        <Box>
+                            <Box textAlign={'end'} mt={'1rem'}>
+                                <Button onClick={onNewReplyOpen} type="button" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}><BiMessageDetail></BiMessageDetail>Reply</Button>
+                            </Box>
 
-                <Container maxW={'container.xl'}>
-                    <Heading textAlign={'center'} mt={'2rem'} mb='1rem'>Replies</Heading>
-                    <Divider mb={'2rem'}></Divider>
+                            <Container maxW={'container.xl'}>
+                                <Heading textAlign={'center'} mt={'2rem'} mb='1rem'>Replies</Heading>
+                                <Divider mb={'2rem'}></Divider>
 
-                    <PaginationSubForumReply data={subForumReply}
-                        RenderComponent={ReplyCard}
-                        title="SubForumReply"
-                        pageLimit={0}
-                        dataLimit={5} />
+                                <PaginationSubForumReply data={subForumReply}
+                                    RenderComponent={ReplyCard}
+                                    title="SubForumReply"
+                                    pageLimit={0}
+                                    dataLimit={5} />
 
-                </Container>
+                            </Container>
+                        </Box>
+                        :
+                        <Container maxW={'container.xl'} mt={'5rem'} mb={'5rem'}>
+                            <Flex direction={'row'} mx={'auto'} justifyContent={'center'}>
+                                <Flex justifyContent={'center'} alignItems={'center'} w={'50rem'} h={'20rem'} borderRadius={'xl'} shadow={'xl'} bgColor={'gray.200'}>
+                                    <Text fontWeight={'bold'}><AiFillLock></AiFillLock>This post was locked by the admin... You won't be able to reply</Text>
+                                </Flex>
+                            </Flex>
+                        </Container>
+                }
+
 
             </Container>
 

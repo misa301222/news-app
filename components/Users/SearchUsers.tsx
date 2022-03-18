@@ -67,7 +67,7 @@ function SearchUsers() {
                         <Flex gap={'1rem'} mt={'2rem'} mb={'2rem'} direction={'row'} alignItems={'center'}>
                             <FormLabel textAlign={'end'}>Email</FormLabel>
                             <Input onChange={handleOnChangeSearchUser} type={'text'} maxLength={256} placeholder={'Search by Email....'} />
-                            <Button type="submit"><FaSearch fontSize={'2rem'}></FaSearch>&nbsp; Search </Button>
+                            <Button disabled={!searchUser} type="submit"><FaSearch fontSize={'2rem'}></FaSearch>&nbsp; Search </Button>
                         </Flex>
                     </form>
                 </Box>

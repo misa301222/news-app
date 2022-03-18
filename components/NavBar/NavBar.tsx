@@ -72,7 +72,7 @@ function NavBar(props: any) {
 
     return (
         <>
-            <Box bg={useColorModeValue('gray.200', 'gray.900')} px={4} shadow='sm'>
+            <Box bg={useColorModeValue('gray.700', 'gray.900')} px={4} shadow='sm'>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <IconButton
                         size={'md'}
@@ -81,13 +81,16 @@ function NavBar(props: any) {
                         display={{ md: 'none' }}
                         onClick={isOpen ? onClose : onOpen}
                     />
-                    <HStack spacing={8} alignItems={'center'}>
+                    <HStack spacing={8} alignItems={'center'} color={'red.300'}>
                         <motion.div
                             whileHover={{
-                                color: '#F56565'
+                                color: '#C53030'
                             }}
                             transition={{
                                 type: 'spring'
+                            }}
+                            style={{
+                                color: '#FC8181'
                             }}>
                             <Link href="/" style={{ textDecoration: 'none' }}>
                                 <Flex cursor={'pointer'} display={'inline-flex'} alignItems={'center'} fontSize={'4xl'} fontWeight={'bold'}><IoNewspaper></IoNewspaper> <Text>News App</Text></Flex>
@@ -105,6 +108,7 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/`}>
                                 <Text fontWeight={'bold'}><ImHome></ImHome>Home</Text>
@@ -117,6 +121,7 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/publish/explorePublish`}>
                                 <Text fontWeight={'bold'}><FaCompass></FaCompass>Explore</Text>
@@ -129,6 +134,7 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/forums/explore`}>
                                 <Text fontWeight={'bold'}><MdForum></MdForum>Forums</Text>
@@ -141,6 +147,7 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/users/searchUsers`}>
                                 <Text fontWeight={'bold'}><FaUserAlt></FaUserAlt>Users</Text>
@@ -153,6 +160,7 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/article/searchArticle`}>
                                 <Text fontWeight={'bold'}><RiArticleFill></RiArticleFill>Articles</Text>
@@ -167,6 +175,7 @@ function NavBar(props: any) {
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: useColorModeValue('gray.200', 'gray.700'),
+                                        color: '#C53030'
                                     }}
                                     href={`/login`}>
                                     Login
@@ -182,6 +191,7 @@ function NavBar(props: any) {
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: useColorModeValue('gray.200', 'gray.700'),
+                                        color: '#C53030'
                                     }}
                                     href={`/signUp`}>
                                     SignUp
