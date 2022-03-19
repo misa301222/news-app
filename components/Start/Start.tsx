@@ -1,12 +1,30 @@
-import { Box, Container, Divider, Flex, Heading, Img, Text } from "@chakra-ui/react";
-import { useSession } from "next-auth/react";
+import { Box, Button, color, Container, Divider, Flex, Heading, Image, Img, Text } from "@chakra-ui/react";
 import { motion } from 'framer-motion';
-import { FaNewspaper } from "react-icons/fa";
+import { FaLongArrowAltRight, FaNewspaper } from "react-icons/fa";
 import { GiNewspaper } from 'react-icons/gi'
 import { IoNewspaperSharp } from "react-icons/io5";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
-function Start() {
-    const { data: session, status } = useSession();
+interface Article {
+    articleId: number,
+    articleHeader: string,
+    articleSubHeader: string,
+    articleMainImageURL: string[],
+    articleParagraph: string[],
+    articleImageURL: string[],
+    datePublished: Date,
+    createdBy: string
+}
+
+function Start({ data }: any) {
+    const [articles] = useState<Article[]>(data as Article[]);
+    const router = useRouter();
+
+    const handleOnClickKeepReading = (articleId: number) => {
+        router.push(`/article/${articleId}`);
+    }
 
     return (
         <Box>
@@ -117,11 +135,79 @@ function Start() {
                 </motion.div>
             </Container>
 
-            <Container maxW={'container.xl'} mt={'2rem'} mb={'10rem'}>
-                {/* TODO GET SOME ARTICLES AND SHOW THEM HERE */}
+            <Container maxW={'container.lg'} mt={'2rem'} mb={'10rem'}>
+
+                <Heading textAlign={'center'}>Latest Articles</Heading>
+                <Divider borderColor={'black'} mb={'2rem'}></Divider>
+
+                <Box>
+                    <Flex direction={'column'}>
+                        {
+                            articles?.map((element: Article, index: number) => (
+                                <motion.div
+                                    key={index}
+
+                                    initial={{
+                                        opacity: 0,
+                                        translateX: 500
+                                    }}
+
+                                    whileInView={{
+                                        opacity: 1,
+                                        translateX: 0,
+                                        transition: {
+                                            type: 'spring',
+                                            duration: 2,
+                                            delay: 0.3
+                                        }
+                                    }}
+
+                                    viewport={{
+                                        once: true
+                                    }}
+                                >
+                                    <Box bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'} color={'white'} borderRadius={'md'} mb={'2rem'} p='3' shadow={'dark-lg'}>
+                                        <Container maxW={'container.lg'} mb={'2rem'}>
+                                            <Heading color={'red.400'} textAlign={'center'}>{element.articleHeader}</Heading>
+                                            <Divider mb={'2rem'} borderColor={'white'}></Divider>
+                                            {
+                                                element.articleMainImageURL[0] ?
+                                                    <Image src={element.articleMainImageURL[0]} maxH={'30rem'} mx={'auto'} borderRadius={'md'} />
+                                                    : null
+                                            }
+
+                                            {
+                                                element.articleParagraph[0] ?
+                                                    <Box mt={'2rem'}>
+                                                        <Text noOfLines={9} fontWeight={'bold'}>
+                                                            {element.articleParagraph[0]}
+                                                        </Text>
+                                                    </Box>
+                                                    :
+                                                    <Box mt={'2rem'}>
+                                                        <Text noOfLines={9} fontWeight={'bold'}>
+                                                            There's no paragraphs...
+                                                        </Text>
+                                                    </Box>
+                                            }
+                                            <Box mt={'2rem'} textAlign={'center'}>
+                                                <Button onClick={() => handleOnClickKeepReading(element.articleId)} color={'black'}>Keep Reading <FaLongArrowAltRight></FaLongArrowAltRight> </Button>
+                                            </Box>
+
+                                        </Container>
+                                    </Box>
+                                </motion.div>
+                            ))
+                        }
+                    </Flex>
+                </Box>
             </Container>
 
-        </Box >
+            <Container maxW={'container.lg'} mb={'5rem'}>
+                <Link href='/article/searchArticle'><Heading textAlign={'center'} color={"blue.700"} cursor={'pointer'} _hover={{ color: 'blue.300' }}>Search More Articles</Heading></Link>
+            </Container>
+
+        </Box>
     )
 }
 

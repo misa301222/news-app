@@ -82,7 +82,7 @@ function SearchArticle() {
                                     }}
                                 >
                                     <Link href={`/article/${element.articleId}`}>
-                                        <Box bgColor={"gray.700"} p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'}>
+                                        <Box p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'}>
                                             <Box p='2'>
                                                 <Box bg={""} h={'3rem'} borderRadius={"lg"}>
                                                     <Heading isTruncated color={'red.300'} textAlign={'center'}>{element.articleHeader}</Heading>

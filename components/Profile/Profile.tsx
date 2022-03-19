@@ -68,7 +68,7 @@ function Profile({ data }: any) {
                         once: false
                     }}>
                     <Box>
-                        <Container bgColor={'gray.700'} h={"40rem"} maxW={'25rem'} shadow={'2xl'}>
+                        <Container h={"40rem"} maxW={'25rem'} shadow={'2xl'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'}>
                             <Flex direction={'column'}>
                                 <Box mt={'1rem'}>
                                     <Image shadow={"dark-lg"} mx={'auto'} objectFit={'cover'} borderRadius={'full'} boxSize={'15rem'}
@@ -123,7 +123,7 @@ function Profile({ data }: any) {
                     }}>
                     <Box>
                         <Flex direction={'column'} justifyContent={'space-evenly'} gap={'2rem'} color={'white'}>
-                            <Box w={'90%'} h={'40rem'} bgColor={'gray.700'} p={'5'} shadow={"dark-lg"}>
+                            <Box w={'90%'} h={'40rem'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'} p={'5'} shadow={"dark-lg"} >
                                 <Heading color={'blue.200'} textAlign={'center'}>About Me</Heading>
                                 <Divider mb={'2rem'}></Divider>
                                 {
@@ -134,7 +134,7 @@ function Profile({ data }: any) {
                                 }
                             </Box>
 
-                            <Box w={'90%'} minH={'19rem'} bgColor={'gray.700'} p={'5'} shadow={"dark-lg"} mb={'8rem'}>
+                            <Box w={'90%'} minH={'19rem'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'} p={'5'} shadow={"dark-lg"} mb={'8rem'} >
                                 <Heading color={'blue.200'} textAlign={'center'}>Published Articles</Heading>
                                 <Divider></Divider>
                                 <Container maxW={'container.lg'} mt={'3rem'}>

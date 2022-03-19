@@ -239,7 +239,7 @@ function SeeSubForum({ data }: any) {
                         : null
                 }
 
-                <Box backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
+                <Box bgGradient={'linear(to-b, gray.300, gray.500)'} border='1px' p='5' borderRadius={'xl'} shadow={'lg'}>
                     <Flex direction={'row'}>
                         <Box w={'20%'}>
                             <Flex direction={'column'} justifyContent={'center'}>

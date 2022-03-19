@@ -50,7 +50,7 @@ function ShowArticle({ data }: any) {
 
     return (
         <Box>
-            <Container maxW={'container.xl'} mt={'2rem'} backgroundColor={'gray.300'} p='5' borderRadius={'md'} shadow={"dark-lg"}>
+            <Container maxW={'container.xl'} mt={'2rem'} bgGradient={'linear(to-b, gray.400, gray.200, gray.400)'} p='5' borderRadius={'md'} shadow={"dark-lg"}>
                 <Heading textAlign={'center'}>{article.articleHeader}</Heading>
                 <Divider borderColor={'black'}></Divider>
                 <Flex direction={'row'} alignItems={'center'} mt='2rem'>
@@ -99,16 +99,33 @@ function ShowArticle({ data }: any) {
 
                 {
                     article.articleImageURL[0] ?
-                        <Box mt={'2rem'} backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
-                            <Heading mb='2rem' textAlign={'center'}>Attached Images</Heading>
-                            <Flex direction={'row'} gap={'2rem'} overflowX={'auto'} justifyContent={'center'} overflowY={'auto'}>
-                                {
-                                    article.articleImageURL?.map((element: string, index: number) => (
-                                        <Image onClick={() => handleOnClickImage(element)} key={index} src={element} maxH={'10rem'} cursor={'pointer'} />
-                                    ))
+                        <motion.div
+                            initial={{
+                                opacity: 0,
+                                translateX: 500
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: 0,
+                                transition: {
+                                    type: 'spring',
+                                    duration: 2
                                 }
-                            </Flex>
-                        </Box>
+                            }}
+                            viewport={{
+                                once: true
+                            }}>
+                            <Box mt={'2rem'} backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
+                                <Heading mb='2rem' textAlign={'center'}>Attached Images</Heading>
+                                <Flex direction={'row'} gap={'2rem'} overflowX={'auto'} justifyContent={'center'} overflowY={'auto'}>
+                                    {
+                                        article.articleImageURL?.map((element: string, index: number) => (
+                                            <Image onClick={() => handleOnClickImage(element)} key={index} src={element} maxH={'10rem'} cursor={'pointer'} />
+                                        ))
+                                    }
+                                </Flex>
+                            </Box>
+                        </motion.div>
                         : null
                 }
 

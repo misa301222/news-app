@@ -102,7 +102,7 @@ function ReplyCard({ data }: any) {
     }, []);
 
     return (
-        <Box mb={'2rem'} border={'1px'} p='5' borderColor={'gray.200'} borderRadius={'xl'} shadow={'lg'}>
+        <Box mb={'2rem'} border={'1px'} p='5' borderColor={'black'} borderRadius={'xl'} shadow={'lg'} bgGradient={'linear(to-b, gray.50, gray.200)'}>
             {
                 userProfile?.email === currentUser ?
                     <Box textAlign={'end'}>

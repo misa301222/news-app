@@ -41,7 +41,8 @@ function ArticleGrid({ data }: any) {
                                 width: '30rem',
                                 padding: '2',
                                 boxShadow: '0 .5rem 1rem',
-                                backgroundColor: '#2D3748'
+                                backgroundColor: '#2D3748',
+                                background: `linear-gradient(0deg, rgba(26,32,44,1) 0%, rgba(45,55,72,1) 50%, rgba(26,32,44,1) 100%)`,
                             }}
                         >
                             <Link href={`/article/${element.articleId}`}>
