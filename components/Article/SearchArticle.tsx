@@ -19,7 +19,7 @@ interface Article {
 function SearchArticle() {
     const [searchArticle, setSearchArticle] = useState<string>('');
     const [articles, setArticles] = useState<Article[]>();
-
+    const [isEmpty, setIsEmpty] = useState<boolean>(false);
 
     const handleOnChangeSearchArticle = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchArticle(event.target.value);
@@ -47,6 +47,11 @@ function SearchArticle() {
 
         const response = await searchArticleByArticleHeader(searchArticle);
         setArticles(response);
+        if (response.length) {
+            setIsEmpty(false);
+        } else {
+            setIsEmpty(true);
+        }
     }
 
     return (
@@ -69,45 +74,60 @@ function SearchArticle() {
                 <Box p={'2'} mt={'5rem'}>
                     <Flex wrap={"wrap"} gap={'2rem'} justifyContent={'center'}>
                         {
-                            articles?.map((element: Article, index: number) => (
-                                <motion.div key={index}
-                                    whileHover={{
-                                        scale: 1.1
+                            !isEmpty ?
+                                articles?.map((element: Article, index: number) => (
+                                    <motion.div key={index}
+                                        initial={{
+                                            opacity: 0
+                                        }}
+                                        whileHover={{
+                                            scale: 1.1
+                                        }}
+                                        animate={{
+                                            type: 'spring',
+                                            opacity: 1
+                                        }}
+                                        style={{
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <Link href={`/article/${element.articleId}`}>
+                                            <Box p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'}>
+                                                <Box p='2'>
+                                                    <Box bg={""} h={'3rem'} borderRadius={"lg"}>
+                                                        <Heading isTruncated color={'red.300'} textAlign={'center'}>{element.articleHeader}</Heading>
+                                                    </Box>
+                                                    <Divider></Divider>
+                                                    <Flex mt={'1rem'}>
+                                                        <Box w={'40%'}>
+                                                            <Box>
+                                                                {element.articleMainImageURL[0] ?
+                                                                    <Image mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={element.articleMainImageURL[0]} alt='ArticleMainImage' />
+                                                                    : null}
+                                                            </Box>
+                                                        </Box>
+
+                                                        <Box w={'60%'} p={'3'}>
+                                                            <Text noOfLines={6} color={'white'}>
+                                                                {element.articleParagraph[0] ? element.articleParagraph[0] : null}
+                                                            </Text>
+                                                        </Box>
+                                                    </Flex>
+                                                </Box>
+                                            </Box>
+                                        </Link>
+                                    </motion.div>
+                                ))
+                                :
+                                <motion.div
+                                    initial={{
+                                        opacity: 0
                                     }}
                                     animate={{
-                                        type: 'spring'
-                                    }}
-                                    style={{
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <Link href={`/article/${element.articleId}`}>
-                                        <Box p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'}>
-                                            <Box p='2'>
-                                                <Box bg={""} h={'3rem'} borderRadius={"lg"}>
-                                                    <Heading isTruncated color={'red.300'} textAlign={'center'}>{element.articleHeader}</Heading>
-                                                </Box>
-                                                <Divider></Divider>
-                                                <Flex mt={'1rem'}>
-                                                    <Box w={'40%'}>
-                                                        <Box>
-                                                            {element.articleMainImageURL[0] ?
-                                                                <Image mx={'auto'} borderRadius={'full'} boxSize={'150px'} objectFit={'cover'} src={element.articleMainImageURL[0]} alt='ArticleMainImage' />
-                                                                : null}
-                                                        </Box>
-                                                    </Box>
-
-                                                    <Box w={'60%'} p={'3'}>
-                                                        <Text noOfLines={6} color={'white'}>
-                                                            {element.articleParagraph[0] ? element.articleParagraph[0] : null}
-                                                        </Text>
-                                                    </Box>
-                                                </Flex>
-                                            </Box>
-                                        </Box>
-                                    </Link>
+                                        opacity: 1
+                                    }}>
+                                    <Heading>There's no articles...</Heading>
                                 </motion.div>
-                            ))
                         }
                     </Flex>
                 </Box>

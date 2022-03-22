@@ -9,20 +9,9 @@ const Home: NextPage = ({ articles }: any) => {
   )
 }
 
-// TODO MAKE THIS WITHOUT REQUIRING SESSION
 export async function getServerSideProps(context: any) {
-  const session = await getSession({ req: context.req });
   const { req } = context;
   const { cookie } = req.headers;
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
-  }
 
   const [responseArticles] = await Promise.all([
     fetch(`${process.env.NEXTAUTH_URL}/api/article/getArticleByDateCreatedLastTwenty/articleAPI`, {

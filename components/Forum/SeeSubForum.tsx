@@ -1,8 +1,8 @@
 import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Image, Img, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { BsFilePost } from "react-icons/bs";
-import { MdEmail } from "react-icons/md";
-import { AiFillLock, AiOutlineComment } from 'react-icons/ai';
+import { MdCancel, MdEmail } from "react-icons/md";
+import { AiFillLock, AiFillUnlock, AiOutlineComment } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import Link from "next/link";
 import { BiImage, BiMessageDetail } from 'react-icons/bi'
@@ -47,6 +47,11 @@ interface SubForumReply {
     subForumId: number
 }
 
+const enum UserRole {
+    USER = 1,
+    ADMIN = 2
+}
+
 function SeeSubForum({ data }: any) {
     const [subForum, setSubForum] = useState<SubForum>(data.subForum as SubForum);
     const [userProfile, setUserProfile] = useState<UserProfile>(data.userProfile as UserProfile);
@@ -70,8 +75,8 @@ function SeeSubForum({ data }: any) {
         setNewReply(event.target.value);
     }
 
-    const getSubForumsReplies = async () => {
-        const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumId/${subForum.subForumId}`, {
+    const getSubForumsReplies = async (subForumId: number) => {
+        const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumId/${subForumId}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -122,7 +127,6 @@ function SeeSubForum({ data }: any) {
 
     const addPlusOneMessage = async () => {
         const { email } = session.user;
-
         const response = await updateUserProfile(email);
     }
 
@@ -146,7 +150,7 @@ function SeeSubForum({ data }: any) {
                     }).then(async () => {
                         OnNewReplyClose();
                         await addPlusOneMessage();
-                        await getSubForumsReplies();
+                        await getSubForumsReplies(subForum.subForumId);
                     });
                 }
             });
@@ -173,8 +177,32 @@ function SeeSubForum({ data }: any) {
         return data;
     }
 
-    const handleOnDeleteSubForum = async () => {
+    async function lockUnlockSubForum(subForumId: number) {
+        const response = await fetch(`/api/subForum/lockUnlockSubForumBySubForumId/${subForumId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PUT',
+        });
 
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+
+    const handleOnClickLockSubForum = async () => {
+        const subForumId: number = subForum.subForumId;
+        const response = await lockUnlockSubForum(subForumId);
+        setSubForum(response);
+        await getSubForumsReplies(subForumId);
+    }
+
+    const handleOnDeleteSubForum = async () => {
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to delete your post?",
@@ -220,10 +248,7 @@ function SeeSubForum({ data }: any) {
 
     useEffect(() => {
         setCurrentUser(localStorage.getItem('email')!);
-        console.log('change');
     }, [subForumReply]);
-
-
 
     return (
         <Box>
@@ -232,9 +257,10 @@ function SeeSubForum({ data }: any) {
                 <Divider mb='2rem'></Divider>
 
                 {
-                    currentUser === subForum.createdBy ?
+                    currentUser === subForum.createdBy || session?.user.role === UserRole.ADMIN ?
                         <Box mb={'1rem'} textAlign={'end'}>
-                            <Button color='white' bgColor={'red.500'} _hover={{ bgColor: 'red.700' }} shadow='md' onClick={handleOnDeleteSubForum}>X</Button>
+                            <Button mr={'2rem'} color='black' shadow='md' onClick={handleOnClickLockSubForum}>{subForum.isOpen ? <Text><AiFillLock></AiFillLock>Lock Sub Forum</Text> : <Text><AiFillUnlock></AiFillUnlock>Unlock Sub Forum</Text>} </Button>
+                            <Button color='white' bgColor={'red.500'} _hover={{ bgColor: 'red.700' }} shadow='md' onClick={handleOnDeleteSubForum}><MdCancel></MdCancel></Button>
                         </Box>
                         : null
                 }
