@@ -42,6 +42,7 @@ function PaginationSubForumReply({ data, RenderComponent, pageLimit, dataLimit }
                 }
             </Flex>
 
+            {/* TODO FIX PAGINATION DISABLED */}
             <Container mb={'5rem'} maxW={'container.sm'}>
                 <Flex direction={'row'} justifyContent={'space-evenly'}>
                     <Button backgroundColor={'gray.600'}

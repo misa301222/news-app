@@ -1,4 +1,4 @@
-import { Box, Center, Container, Divider, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Center, Container, Divider, Flex, Heading, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import { Carousel } from "react-responsive-carousel";
 import { motion } from 'framer-motion';
@@ -6,6 +6,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Link from "next/link";
 import { BsFillPenFill } from "react-icons/bs";
 import { BiImage } from "react-icons/bi";
+import { FaPencilAlt } from "react-icons/fa";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 interface Article {
     articleId: number,
@@ -42,14 +45,29 @@ function ShowArticle({ data }: any) {
     const [userProfile, setUserProfile] = useState<UserProfile>(data.userProfile as UserProfile);
     const [selectedImage, setSelectedImage] = useState<string>('');
     const { isOpen: isViewImageOpen, onOpen: onViewImageOpen, onClose: onViewImageClose } = useDisclosure();
+    const { data: session, status } = useSession();
+    const router = useRouter();
 
     const handleOnClickImage = (imageURL: string) => {
         setSelectedImage(imageURL);
         onViewImageOpen();
     }
 
+    const handleOnClickEditArticle = (articleId: number) => {
+        router.push(`/article/editArticle/${articleId}`);
+    }
+
     return (
         <Box>
+            {
+                session?.user?.email === user?.email ?
+                    <Container maxW={'container.xl'} mt={'2rem'}>
+                        <Flex justifyContent={'end'}>
+                            <Button onClick={() => handleOnClickEditArticle(article.articleId)} type="button" color={'black'} bgColor={'orange.300'} _hover={{ bgColor: 'orange.400' }}><FaPencilAlt></FaPencilAlt> Edit Article</Button>
+                        </Flex>
+                    </Container>
+                    : null
+            }
             <Container maxW={'container.xl'} mt={'2rem'} bgGradient={'linear(to-b, gray.400, gray.200, gray.400)'} p='5' borderRadius={'md'} shadow={"dark-lg"}>
                 <Heading textAlign={'center'}>{article.articleHeader}</Heading>
                 <Divider borderColor={'black'}></Divider>

@@ -26,7 +26,15 @@ function SignUp() {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong!');
+            //throw new Error(data.message || 'Something went wrong!');
+            console.log('if');
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: `${data.message}`,
+                showConfirmButton: true,
+            });
+            return null;
         }
 
         return data;
@@ -35,7 +43,7 @@ function SignUp() {
     const handleOnSubmitForm = async (event: SyntheticEvent) => {
         event.preventDefault();
         const response = await register(fullName, email, password);
-
+        console.log(response);
         if (response) {
             Swal.fire({
                 position: 'center',

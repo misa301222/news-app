@@ -216,7 +216,7 @@ function Publish() {
                         title: 'Article Added Succesfully!',
                         showConfirmButton: true,
                     }).then(() => {
-                        router.push('publish/explorePublish');
+                        router.push('/publish/explorePublish');
                     });
                 }
             }

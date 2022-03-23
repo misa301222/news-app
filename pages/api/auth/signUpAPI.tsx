@@ -8,7 +8,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         if (!email || !email.includes('@') || !password) {
             res.status(422).json({ message: 'Invalid Data' });
-            return;
         }
 
         const checkExisting = await prisma.users.findFirst({
@@ -19,7 +18,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         if (checkExisting) {
             res.status(422).json({ message: 'User already exists' });
-            return;
         }
 
         const status = await prisma.users.create({
