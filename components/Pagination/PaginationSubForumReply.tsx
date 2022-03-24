@@ -1,9 +1,9 @@
 import { Box, Button, Container, Divider, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function PaginationSubForumReply({ data, RenderComponent, pageLimit, dataLimit }: any) {
-    const [pages] = useState(Math.round(data.length / dataLimit));
+    const [pages] = useState(Math.ceil(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState<number>(1);
     const navigate = useRouter();
 
@@ -35,14 +35,12 @@ function PaginationSubForumReply({ data, RenderComponent, pageLimit, dataLimit }
         <Box maxW={'90%'} mx='auto' color={'white'}>
             <Flex direction={'column'} minH={'55rem'}>
                 {
-                    // subForums.map((element: SubForum, index: number) => (
                     getPaginatedData().map((element: any, index: any) => (
                         <RenderComponent key={index} data={element} />
                     ))
                 }
             </Flex>
 
-            {/* TODO FIX PAGINATION DISABLED */}
             <Container mb={'5rem'} maxW={'container.sm'}>
                 <Flex direction={'row'} justifyContent={'space-evenly'}>
                     <Button backgroundColor={'gray.600'}
@@ -66,7 +64,7 @@ function PaginationSubForumReply({ data, RenderComponent, pageLimit, dataLimit }
                                 bgColor: 'gray.300',
                                 cursor: 'not-allowed'
                             }
-                        }} disabled={(currentPage - 1) >= pages} onClick={goToNextPage}>Next</Button>
+                        }} disabled={currentPage === pages} onClick={goToNextPage}>Next</Button>
                 </Flex>
             </Container>
         </Box>

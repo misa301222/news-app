@@ -40,9 +40,7 @@ function ReplyCard({ data }: any) {
 
         const dataResponse = await response.json();
 
-        if (dataResponse) {
-            setUserProfile(dataResponse);
-        }
+        return dataResponse;
     }
 
     const getUserByEmail = async () => {
@@ -55,13 +53,10 @@ function ReplyCard({ data }: any) {
 
         const dataResponse = await response.json();
 
-        if (dataResponse) {
-            setUser(dataResponse);
-        }
+        return dataResponse;
     }
 
     const deleteSubForumReplyById = async () => {
-        let subForumId: number = data.subForumId;
 
         Swal.fire({
             title: 'Are you sure?',
@@ -96,10 +91,20 @@ function ReplyCard({ data }: any) {
     }
 
     useEffect(() => {
-        getUserProfileByEmail();
-        getUserByEmail();
-        setCurrentUser(localStorage.getItem('email')!);
-    }, []);
+        // Some synchronous code.
+        (async () => {
+            const responseUserProfile = await getUserProfileByEmail();
+            const responseUser = await getUserByEmail();
+            setUserProfile(responseUserProfile);
+            setUser(responseUser);
+            setCurrentUser(localStorage.getItem('email')!);
+        })();
+
+        return () => {
+            // Component unmount code.
+        };
+
+    }, [data]);
 
     return (
         <Box mb={'2rem'} border={'1px'} p='5' borderColor={'black'} borderRadius={'xl'} shadow={'lg'} bgGradient={'linear(to-b, gray.50, gray.200)'}>

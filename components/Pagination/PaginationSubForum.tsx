@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 function PaginationSubForum({ data, RenderComponent, pageLimit, dataLimit }: any) {
-    const [pages] = useState(Math.round(data.length / dataLimit));
+    const [pages] = useState(Math.ceil(data.length / dataLimit));
     const [currentPage, setCurrentPage] = useState<number>(1);
     const navigate = useRouter();
 
@@ -65,7 +65,7 @@ function PaginationSubForum({ data, RenderComponent, pageLimit, dataLimit }: any
                                 bgColor: 'gray.300',
                                 cursor: 'not-allowed'
                             }
-                        }} disabled={currentPage >= pages} onClick={goToNextPage}>Next</Button>
+                        }} disabled={currentPage === pages} onClick={goToNextPage}>Next</Button>
                 </Flex>
             </Container>
         </Box>
