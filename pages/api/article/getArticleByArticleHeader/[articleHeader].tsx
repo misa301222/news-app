@@ -10,14 +10,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         //     return res.status(400).json({ msg: "Invalid Authentication!" })
         // }
 
-        const { email }: any = req.query;
-        let userProfile = await prisma.userProfile.findUnique({
+        const { articleHeader }: any = req.query;
+
+        let article = await prisma.article.findMany({
             where: {
-                email: email
-            },            
+                articleHeader: {
+                    contains: articleHeader,
+                    mode: "insensitive"
+                }
+            }
         });
 
-        res.status(201).json(userProfile);
+        res.status(201).json(article);
     }
 }
 

@@ -1,9 +1,12 @@
-import { Box, Button, Container, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Container, Divider, Flex, Heading, Image, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdTopic } from "react-icons/md";
 import { motion } from 'framer-motion';
 import Link from "next/link";
+import { FaComments } from "react-icons/fa";
+import PaginationSubForum from "../Pagination/PaginationSubForum";
+import SubForumCard from "./SubForumCard";
 
 interface SubForum {
     subForumId: number,
@@ -12,6 +15,7 @@ interface SubForum {
     subForumImageURL: string[],
     dateCreated: Date,
     createdBy: string,
+    isOpen: boolean,
     forumCategoryId: number
 }
 
@@ -27,43 +31,19 @@ function SeeForum({ data }: any) {
     return (
         <Box>
             <Container maxW={'container.lg'}>
-                <Heading textAlign={'center'} mt={'2rem'}>Explore SubForums</Heading>
+                <Heading textAlign={'center'} mt={'2rem'}>Explore SubForums <FaComments></FaComments></Heading>
+                <Divider mb={'2rem'}></Divider>
 
-
-                <Box mt={'2rem'} textAlign={'end'}>
+                <Box mt={'2rem'} mb={'2rem'} textAlign={'end'}>
                     <Button onClick={handleOnClickNewTopic}><MdTopic></MdTopic> New Topic</Button>
                 </Box>
-            </Container>
 
-            <Box maxW={'90%'} mx='auto' color={'white'}>
-                {
-                    subForums.map((element: SubForum, index: number) => (
-                        <motion.div
-                            whileHover={{
-                                scale: 1.1
-                            }}
-                            animate={{
-                                type: 'spring'
-                            }}
-                            key={index}
-                            style={{
-                                width: '50rem',
-                                backgroundColor: '#2D3748',
-                                padding: '1rem',
-                                borderRadius: '13px',
-                                cursor: 'pointer',
-                                marginBottom: '2rem'
-                            }}>
-                            <Link href={`/forums/seeSubForum/${element.subForumId}`}>
-                                <Box>
-                                    <Heading fontSize={'xl'} color={'red.300'} isTruncated>{element.subForumName}</Heading>
-                                    <Text fontWeight={'bold'} isTruncated>- {element.subForumDescription}</Text>
-                                </Box>
-                            </Link>
-                        </motion.div>
-                    ))
-                }
-            </Box>
+                <PaginationSubForum data={subForums}
+                    RenderComponent={SubForumCard}
+                    title="SubForum"
+                    pageLimit={0}
+                    dataLimit={5} />
+            </Container>            
         </Box>
     )
 }

@@ -139,9 +139,20 @@ function ExplorePublish({ data }: any) {
                             whileHover={{
                                 scale: 1.1
                             }}
+                            initial={{
+                                opacity: 0.8,
+                                translateX: '1.5rem'
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: '0rem',
+                                transition: {
+                                    type: 'spring',
+                                    duration: 1
+                                }
+                            }}
                             animate={{
-                                type: 'spring'
-
+                                type: 'spring',
                             }}
                             onClick={() => handleOnCickPublishArticle()}
                         >
@@ -172,6 +183,18 @@ function ExplorePublish({ data }: any) {
                                 type: 'spring'
 
                             }}
+                            initial={{
+                                opacity: 0.8,
+                                translateX: '1.5rem'
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: '0rem',
+                                transition: {
+                                    type: 'spring',
+                                    duration: 1
+                                }
+                            }}
                             onClick={async () => handleOnClickSeeArticles()}
                         >
                             <Box p='1' bgColor={'gray.700'} color={'white'} borderRadius={"xl"} w={'22rem'} h={'8rem'} shadow={'dark-lg'}>
@@ -201,6 +224,18 @@ function ExplorePublish({ data }: any) {
                                 type: 'spring'
 
                             }}
+                            initial={{
+                                opacity: 0.8,
+                                translateX: '1.5rem'
+                            }}
+                            whileInView={{
+                                opacity: 1,
+                                translateX: '0rem',
+                                transition: {
+                                    type: 'spring',
+                                    duration: 1
+                                }
+                            }}
                             onClick={async () => handleOnClickDeleteArticles()}
                         >
                             <Box p='1' bgColor={'gray.700'} color={'white'} borderRadius={"xl"} w={'22rem'} h={'8rem'} shadow={'dark-lg'}>
@@ -224,10 +259,12 @@ function ExplorePublish({ data }: any) {
                     </Flex>
                 </Box>
 
-                <Box mt={'5rem'}>
-                    <Heading>Explore <FaCompass></FaCompass></Heading>
+                <Box mt={'5rem'} mb={'10rem'}>
+                    <Heading textAlign={'center'} mb={'1rem'}>Explore <FaCompass></FaCompass></Heading>
                     <Divider mb={'2rem'}></Divider>
-                    {/* TODO CORREGIR BUG AL BORRAR NO SE RENDERIZA */}
+                    <Box mb={'1rem'} textAlign={'end'}>
+                        <Button onClick={() => router.push('/article/searchArticle')} color='white' bgColor={'red.400'} _hover={{ bgColor: 'red.500' }} shadow='md'>Search Articles</Button>
+                    </Box>
                     <ArticleGrid data={articlesExplore} />
                 </Box>
 
@@ -252,7 +289,7 @@ function ExplorePublish({ data }: any) {
                                             }}
                                         >
                                             <Link href={`/article/${element.articleId}`}>
-                                                <Box bgColor={"gray.700"} p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'}>
+                                                <Box bgColor={"gray.700"} p={'2'} borderRadius={'2xl'} height={'17rem'} w={'30rem'} bgGradient={'linear(to-b, gray.800, gray.700, gray.800)'}>
                                                     <Box p='2'>
                                                         <Box bg={""} h={'3rem'} borderRadius={"lg"}>
                                                             <Heading isTruncated color={'red.300'} textAlign={'center'}>{element.articleHeader}</Heading>

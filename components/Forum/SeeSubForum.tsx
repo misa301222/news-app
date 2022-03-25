@@ -1,14 +1,16 @@
-import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Img, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Image, Img, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Stack, Text, Textarea, useDisclosure } from "@chakra-ui/react";
 import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { BsFilePost } from "react-icons/bs";
-import { MdEmail } from "react-icons/md";
-import { AiOutlineComment } from 'react-icons/ai';
+import { MdCancel, MdEmail } from "react-icons/md";
+import { AiFillLock, AiFillUnlock, AiOutlineComment } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import Link from "next/link";
-import { BiMessageDetail } from 'react-icons/bi'
+import { BiImage, BiMessageDetail } from 'react-icons/bi'
 import Swal from "sweetalert2";
 import ReplyCard from "../ReplyCard/ReplyCard";
 import { useRouter } from "next/router";
+import PaginationSubForumReply from "../Pagination/PaginationSubForumReply";
+import { useSession } from "next-auth/react";
 
 interface SubForum {
     subForumId: number,
@@ -17,6 +19,7 @@ interface SubForum {
     subForumImageURL: string[],
     dateCreated: Date,
     createdBy: string,
+    isOpen: boolean,
     forumCategoryId: number
 }
 
@@ -44,6 +47,11 @@ interface SubForumReply {
     subForumId: number
 }
 
+const enum UserRole {
+    USER = 1,
+    ADMIN = 2
+}
+
 function SeeSubForum({ data }: any) {
     const [subForum, setSubForum] = useState<SubForum>(data.subForum as SubForum);
     const [userProfile, setUserProfile] = useState<UserProfile>(data.userProfile as UserProfile);
@@ -52,16 +60,23 @@ function SeeSubForum({ data }: any) {
     const [newReply, setNewReply] = useState<string>('');
     const [currentUser, setCurrentUser] = useState<string>('');
     const router = useRouter();
+    const [selectedImage, setSelectedImage] = useState<string>('');
+    const { data: session, status }: any = useSession();
 
     const { isOpen: isNewReplyOpen, onOpen: onNewReplyOpen, onClose: OnNewReplyClose } = useDisclosure();
+    const { isOpen: isViewImageOpen, onOpen: onViewImageOpen, onClose: onViewImageClose } = useDisclosure();
 
+    const handleOnClickImage = (imageURL: string) => {
+        setSelectedImage(imageURL);
+        onViewImageOpen();
+    }
 
     const handleOnChangeNewReply = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setNewReply(event.target.value);
     }
 
-    const getSubForumsReplies = async () => {
-        const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumId/${subForum.subForumId}`, {
+    const getSubForumsReplies = async (subForumId: number) => {
+        const response = await fetch(`/api/subForumReply/getSubForumReplyBySubForumId/${subForumId}`, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -93,6 +108,28 @@ function SeeSubForum({ data }: any) {
         return data;
     }
 
+    async function updateUserProfile(email: string) {
+        const response = await fetch(`/api/userProfile/post/addMessageCount/${email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const addPlusOneMessage = async () => {
+        const { email } = session.user;
+        const response = await updateUserProfile(email);
+    }
+
     const handleOnSubmitNewReply = async (event: SyntheticEvent) => {
         event.preventDefault();
         let currentUser = localStorage.getItem('email')!;
@@ -103,7 +140,6 @@ function SeeSubForum({ data }: any) {
                 subForumId: subForum.subForumId
             }
 
-            //console.log(newReplyEntity);
             await saveNewReply(newReplyEntity).then(response => {
                 if (response) {
                     Swal.fire({
@@ -113,7 +149,8 @@ function SeeSubForum({ data }: any) {
                         showConfirmButton: true,
                     }).then(async () => {
                         OnNewReplyClose();
-                        await getSubForumsReplies();
+                        await addPlusOneMessage();
+                        await getSubForumsReplies(subForum.subForumId);
                     });
                 }
             });
@@ -140,19 +177,56 @@ function SeeSubForum({ data }: any) {
         return data;
     }
 
-    const handleOnDeleteSubForum = async () => {
-        let forumCategoryId: number = subForum.forumCategoryId;
-        const response = await deleteSubForumRepliesBySubForumId();
-        const responseSubForum = await deleteSubForumBySubForumId();
-
-        Swal.fire({
-            position: 'center',
-            icon: 'success',
-            title: 'Post Deleted Successfully!',
-            showConfirmButton: true,
-        }).then(() => {
-            router.push(`/forums/enterForum/${forumCategoryId}`);
+    async function lockUnlockSubForum(subForumId: number) {
+        const response = await fetch(`/api/subForum/lockUnlockSubForumBySubForumId/${subForumId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'PUT',
         });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+
+    const handleOnClickLockSubForum = async () => {
+        const subForumId: number = subForum.subForumId;
+        const response = await lockUnlockSubForum(subForumId);
+        setSubForum(response);
+        await getSubForumsReplies(subForumId);
+    }
+
+    const handleOnDeleteSubForum = async () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete your post?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                let forumCategoryId: number = subForum.forumCategoryId;
+                const response = await deleteSubForumRepliesBySubForumId();
+                const responseSubForum = await deleteSubForumBySubForumId();
+
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Post Deleted Successfully!',
+                    showConfirmButton: true,
+                }).then(() => {
+                    router.push(`/forums/enterForum/${forumCategoryId}`);
+                });
+            }
+        })
     }
 
     async function deleteSubForumBySubForumId() {
@@ -174,7 +248,7 @@ function SeeSubForum({ data }: any) {
 
     useEffect(() => {
         setCurrentUser(localStorage.getItem('email')!);
-    }, []);
+    }, [subForumReply]);
 
     return (
         <Box>
@@ -183,12 +257,15 @@ function SeeSubForum({ data }: any) {
                 <Divider mb='2rem'></Divider>
 
                 {
-                    currentUser === subForum.createdBy ?
-                        <Button onClick={handleOnDeleteSubForum}>Delete</Button>
+                    currentUser === subForum.createdBy || session?.user.role === UserRole.ADMIN ?
+                        <Box mb={'1rem'} textAlign={'end'}>
+                            <Button mr={'2rem'} color='black' shadow='md' onClick={handleOnClickLockSubForum}>{subForum.isOpen ? <Text><AiFillLock></AiFillLock>Lock Sub Forum</Text> : <Text><AiFillUnlock></AiFillUnlock>Unlock Sub Forum</Text>} </Button>
+                            <Button color='white' bgColor={'red.500'} _hover={{ bgColor: 'red.700' }} shadow='md' onClick={handleOnDeleteSubForum}><MdCancel></MdCancel></Button>
+                        </Box>
                         : null
                 }
 
-                <Box backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
+                <Box bgGradient={'linear(to-b, gray.300, gray.500)'} border='1px' p='5' borderRadius={'xl'} shadow={'lg'}>
                     <Flex direction={'row'}>
                         <Box w={'20%'}>
                             <Flex direction={'column'} justifyContent={'center'}>
@@ -246,7 +323,7 @@ function SeeSubForum({ data }: any) {
                                             <AiOutlineComment></AiOutlineComment>
                                         </Box>
                                         <Box w={'35%'}>
-                                            <Heading textAlign={'end'} fontSize={'sm'}> Messages:</Heading>
+                                            <Heading textAlign={'end'} fontSize={'sm'}>Messages:</Heading>
                                         </Box>
 
                                         <Box w={'55%'}>
@@ -282,10 +359,10 @@ function SeeSubForum({ data }: any) {
                     subForum.subForumImageURL[0] ?
                         <Box mt={'2rem'} backgroundColor={''} border='1px' borderColor={'gray.200'} p='5' borderRadius={'xl'} shadow={'lg'}>
                             <Heading mb='2rem' textAlign={'center'}>Attached Images</Heading>
-                            <Flex direction={'row'} gap={'2rem'} overflowX={'auto'} justifyContent={'center'}>
+                            <Flex direction={'row'} gap={'2rem'} overflowX={'auto'} justifyContent={'center'} overflowY={'auto'}>
                                 {
                                     subForum.subForumImageURL?.map((element: string, index: number) => (
-                                        <Img key={index} src={element} maxH={'10rem'} cursor={'pointer'} />
+                                        <Img onClick={() => handleOnClickImage(element)} key={index} src={element} maxH={'10rem'} cursor={'pointer'} />
                                     ))
                                 }
                             </Flex>
@@ -295,25 +372,44 @@ function SeeSubForum({ data }: any) {
 
                 <Divider borderColor={'black'} mt={'2rem'}></Divider>
 
-                <Box textAlign={'end'} mt={'1rem'}>
-                    {/* <Link href={{ pathname: `/forums/newReply/${subForum.subForumId}` }}> */}
-                    <Button onClick={onNewReplyOpen} type="button" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}><BiMessageDetail></BiMessageDetail>Reply</Button>
-                    {/* </Link> */}
+                {
+                    subForum.isOpen ?
+                        <Box>
+                            <Box textAlign={'end'} mt={'1rem'}>
+                                <Button onClick={onNewReplyOpen} type="button" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}><BiMessageDetail></BiMessageDetail>Reply</Button>
+                            </Box>
+                        </Box>
+                        : null
+                }
+
+                {
+                    !subForum.isOpen ?
+                        <Container maxW={'container.xl'} mt={'5rem'} mb={'5rem'}>
+                            <Flex direction={'row'} mx={'auto'} justifyContent={'center'}>
+                                <Flex justifyContent={'center'} alignItems={'center'} w={'50rem'} h={'20rem'} borderRadius={'xl'} shadow={'xl'} bgColor={'gray.200'}>
+                                    <Text fontWeight={'bold'}><AiFillLock></AiFillLock>This post was locked by the admin or the main user... You won't be able to reply</Text>
+                                </Flex>
+                            </Flex>
+                        </Container>
+                        : null
+                }
+
+                <Box>
+                    <Container maxW={'container.xl'}>
+                        <Heading textAlign={'center'} mt={'2rem'} mb='1rem'>Replies</Heading>
+                        <Divider mb={'2rem'}></Divider>
+
+                        <PaginationSubForumReply data={subForumReply}
+                            RenderComponent={ReplyCard}
+                            title="SubForumReply"
+                            pageLimit={0}
+                            dataLimit={5} />
+
+                    </Container>
                 </Box>
 
-                <Container maxW={'container.xl'}>
-                    <Heading textAlign={'center'} mt={'2rem'} mb='1rem'>Replies</Heading>
-                    <Divider mb={'2rem'}></Divider>
-                    {
-                        subForumReply.map((element: SubForumReply, index: number) => (
-                            <Box key={index} mb={'2rem'} border={'1px'} p='5' borderColor={'gray.200'} borderRadius={'xl'} shadow={'lg'}>
-                                <ReplyCard subForumReply={element} />
-                            </Box>
-                        ))
-                    }
-                </Container>
 
-            </Container>
+            </Container >
 
 
             <Modal isOpen={isNewReplyOpen} onClose={OnNewReplyClose} size={'xl'}>
@@ -340,7 +436,19 @@ function SeeSubForum({ data }: any) {
                 </ModalContent>
             </Modal>
 
-        </Box>
+
+            <Modal isOpen={isViewImageOpen} onClose={onViewImageClose} size={'full'}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader color={'white'} bgColor={'gray.700'}>View Image <BiImage></BiImage></ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Image shadow={'dark-lg'} mx={'auto'} maxH={'90vh'} src={selectedImage} />
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
+        </Box >
     )
 }
 

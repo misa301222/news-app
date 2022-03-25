@@ -1,7 +1,7 @@
-import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Textarea, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Container, Divider, Flex, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Textarea, useDisclosure } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ChangeEvent, SyntheticEvent, useState } from "react";
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { MdTopic } from "react-icons/md";
@@ -13,12 +13,18 @@ interface ForumCategory {
     forumCategoryDescription: string
 }
 
+const enum UserRole {
+    USER = 1,
+    ADMIN = 2
+}
+
 interface SubForum {
     subForumName: string,
     subForumDescription: string,
     subForumImageURL: string[],
     dateCreated: Date,
     createdBy: string,
+    isOpen: boolean,
     forumCategoryId: number
 }
 
@@ -39,6 +45,7 @@ function NewSubForum({ data }: any) {
         subForumImageURL: [''],
         dateCreated: new Date,
         createdBy: '',
+        isOpen: true,
         forumCategoryId: forumCategoryId ? Number(forumCategoryId) : 0
     });
 
@@ -91,6 +98,29 @@ function NewSubForum({ data }: any) {
         setImagesURL(newArray);
     }
 
+    async function updateUserProfile(email: string) {
+        const response = await fetch(`/api/userProfile/post/addPostCount/${email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Something went wrong!');
+        }
+
+        return data;
+    }
+
+    const addPlusOnePost = async () => {
+        const { email } = session.user;
+
+        const response = await updateUserProfile(email);
+    }
+
     async function saveSubTopic(subForum: SubForum) {
         const response = await fetch(`/api/subForum/subForumAPI`, {
             method: 'POST',
@@ -103,6 +133,7 @@ function NewSubForum({ data }: any) {
                 subForumImageURL: subForum.subForumImageURL,
                 dateCreated: subForum.dateCreated,
                 createdBy: subForum.createdBy,
+                isOpen: subForum.isOpen,
                 forumCategoryId: subForum.forumCategoryId
             })
         });
@@ -130,7 +161,6 @@ function NewSubForum({ data }: any) {
         }
         newSubForum.subForumImageURL = imagesArray;
 
-
         if (newSubForum.createdBy) {
             await saveSubTopic(newSubForum).then(response => {
                 Swal.fire({
@@ -138,8 +168,9 @@ function NewSubForum({ data }: any) {
                     icon: 'success',
                     title: 'SubForum Created Successfully!',
                     showConfirmButton: true,
-                }).then(() => {
-                    router.push('/forums/explore');
+                }).then(async () => {
+                    await addPlusOnePost();
+                    router.push(`/forums/enterForum/${response.forumCategoryId}`);
                 });
             });
         }
@@ -147,6 +178,7 @@ function NewSubForum({ data }: any) {
 
     return (
         <Box>
+
             <Container maxW={'container.lg'} mt={'2rem'}>
                 <Heading textAlign={'center'}>New Topic <MdTopic></MdTopic></Heading>
                 <Divider></Divider>
@@ -190,6 +222,22 @@ function NewSubForum({ data }: any) {
                                 }
                             </Select>
                         </Box>
+
+                        {
+                            session && (
+                                session.user.role === UserRole.ADMIN ?
+                                    <Box mb='2rem' textAlign={'center'}>
+                                        <Flex direction={'row'}>
+                                            <FormLabel>
+                                                Is Open?
+                                            </FormLabel>
+
+                                            <Checkbox isChecked={subForum.isOpen} onChange={(e) => setSubForum(prev => ({ ...prev, isOpen: e.target.checked }))}></Checkbox>
+                                        </Flex>
+                                    </Box>
+                                    : null
+                            )
+                        }
 
                         <Box mb='2rem' textAlign={'center'}>
                             <Button type="submit" disabled={subForum.forumCategoryId === 0 || !subForum.subForumName} mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}>Submit</Button>
@@ -237,7 +285,7 @@ function NewSubForum({ data }: any) {
                     <ModalCloseButton color={'white'} />
                     <ModalBody>
                         <Container>
-                            <Heading mb='1rem' fontSize={'2xl'}>Current Paragraph</Heading>
+                            <Heading mb='1rem' fontSize={'2xl'}>Current Images</Heading>
                             {
                                 imagesURL?.map((element: string, index: number) => (
                                     <Box key={index} mb='1rem'>

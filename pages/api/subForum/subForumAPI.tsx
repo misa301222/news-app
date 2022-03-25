@@ -10,7 +10,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             return res.status(400).json({ msg: "Invalid Authentication!" })
         }
 
-        const { subForumName, subForumDescription, subForumImageURL, dateCreated, createdBy, forumCategoryId } = req.body;
+        const { subForumName, subForumDescription, subForumImageURL, dateCreated, createdBy, isOpen, forumCategoryId } = req.body;
 
         let subForum = await prisma.subForum.create({
             data: {
@@ -19,6 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
                 subForumImageURL: subForumImageURL,
                 dateCreated: dateCreated,
                 createdBy: createdBy,
+                isOpen: isOpen,
                 forumCategoryId: forumCategoryId
             }
         });

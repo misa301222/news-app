@@ -18,13 +18,17 @@ import {
 } from '@chakra-ui/react';
 
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { signOut, useSession } from 'next-auth/react';
-import { IoNewspaper } from 'react-icons/io5';
+import { IoLogInSharp, IoNewspaper } from 'react-icons/io5';
 import { motion } from 'framer-motion';
-import { FaNewspaper, FaUserCircle } from 'react-icons/fa';
+import { FaCompass, FaNewspaper, FaUserAlt, FaUserCheck, FaUserCircle } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { GrConfigure } from "react-icons/gr";
+import { MdForum } from 'react-icons/md';
+import { ImHome } from 'react-icons/im';
+import { RiArticleFill, RiLogoutBoxRFill } from 'react-icons/ri';
+import { GiArchiveRegister } from 'react-icons/gi';
 
 const Links = ['Home', 'SignIn', 'Login'];
 
@@ -46,6 +50,11 @@ function NavBar(props: any) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { data: session, status }: any = useSession();
     const router = useRouter();
+
+    // useEffect(() => {
+    //     console.log(session);
+    //     console.log(status);
+    // }, []);
 
     function logoutHandler() {
         localStorage.clear();
@@ -69,7 +78,7 @@ function NavBar(props: any) {
 
     return (
         <>
-            <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+            <Box bg={useColorModeValue('gray.700', 'gray.900')} px={4} shadow='sm'>
                 <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                     <IconButton
                         size={'md'}
@@ -78,13 +87,16 @@ function NavBar(props: any) {
                         display={{ md: 'none' }}
                         onClick={isOpen ? onClose : onOpen}
                     />
-                    <HStack spacing={8} alignItems={'center'}>
+                    <HStack spacing={8} alignItems={'center'} color={'red.300'}>
                         <motion.div
                             whileHover={{
-                                color: '#F56565'
+                                color: '#C53030'
                             }}
                             transition={{
                                 type: 'spring'
+                            }}
+                            style={{
+                                color: '#FC8181'
                             }}>
                             <Link href="/" style={{ textDecoration: 'none' }}>
                                 <Flex cursor={'pointer'} display={'inline-flex'} alignItems={'center'} fontSize={'4xl'} fontWeight={'bold'}><IoNewspaper></IoNewspaper> <Text>News App</Text></Flex>
@@ -102,10 +114,12 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/`}>
-                                <Text fontWeight={'bold'}>Home</Text>
+                                <Text fontWeight={'bold'}><ImHome></ImHome>Home</Text>
                             </Link>
+
 
                             <Link
                                 px={2}
@@ -114,10 +128,14 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/publish/explorePublish`}>
-                                <Text fontWeight={'bold'}>Explore</Text>
-                            </Link>
+                                <Text fontWeight={'bold'}><FaCompass></FaCompass>Explore</Text>
+                            </Link>)
+
+
+
 
                             <Link
                                 px={2}
@@ -126,10 +144,14 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/forums/explore`}>
-                                <Text fontWeight={'bold'}>Forums</Text>
-                            </Link>
+                                <Text fontWeight={'bold'}><MdForum></MdForum>Forums</Text>
+                            </Link>)
+
+
+
 
                             <Link
                                 px={2}
@@ -138,13 +160,28 @@ function NavBar(props: any) {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
                                 }}
                                 href={`/users/searchUsers`}>
-                                <Text fontWeight={'bold'}>Users</Text>
+                                <Text fontWeight={'bold'}><FaUserAlt></FaUserAlt>Users</Text>
+                            </Link>)
+
+
+
+                            <Link
+                                px={2}
+                                py={1}
+                                rounded={'md'}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: useColorModeValue('gray.300', 'gray.700'),
+                                    color: '#C53030'
+                                }}
+                                href={`/article/searchArticle`}>
+                                <Text fontWeight={'bold'}><RiArticleFill></RiArticleFill>Articles</Text>
                             </Link>
 
-                            {session || status === 'loading' ?
-                                null :
+                            {!session && (
                                 <Link
                                     px={2}
                                     py={1}
@@ -152,14 +189,14 @@ function NavBar(props: any) {
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: useColorModeValue('gray.200', 'gray.700'),
+                                        color: '#C53030'
                                     }}
                                     href={`/login`}>
-                                    Login
-                                </Link>
+                                    <Text fontWeight={'bold'}><IoLogInSharp></IoLogInSharp>Login</Text>
+                                </Link>)
                             }
 
-                            {session || status === 'loading' ?
-                                null :
+                            {!session && (
                                 <Link
                                     px={2}
                                     py={1}
@@ -167,10 +204,12 @@ function NavBar(props: any) {
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: useColorModeValue('gray.200', 'gray.700'),
+                                        color: '#C53030'
                                     }}
                                     href={`/signUp`}>
-                                    SignUp
+                                    <Text fontWeight={'bold'}><FaUserCheck></FaUserCheck>SignUp</Text>
                                 </Link>
+                            )
                             }
                         </HStack>
                     </HStack>
@@ -195,7 +234,7 @@ function NavBar(props: any) {
                                     <MenuItem onClick={() => handleClickPublish()} fontWeight={'bold'} fontSize={'md'}><FaNewspaper></FaNewspaper> <Text pl={'0.5rem'}>Publish</Text></MenuItem>
                                     <MenuItem onClick={() => handleClickSettings()} fontWeight={'bold'} fontSize={'md'}><GrConfigure></GrConfigure> <Text pl={'0.5rem'}>Settings</Text></MenuItem>
                                     <MenuDivider />
-                                    <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+                                    <MenuItem fontWeight={'bold'} onClick={logoutHandler}><RiLogoutBoxRFill></RiLogoutBoxRFill>Logout</MenuItem>
                                 </MenuList>
                             </Menu>)
                         }

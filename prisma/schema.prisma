@@ -54,6 +54,7 @@ model SubForum {
   subForumImageURL    String[] @map("sub_forum_image_url")
   dateCreated         DateTime @map("date_created")
   createdBy           String   @map("created_by")
+  isOpen              Boolean  @map("is_open")
   forumCategoryId     Int      @map("forum_category_id")
 
   @@map("sub_forum")

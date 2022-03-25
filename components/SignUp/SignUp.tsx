@@ -2,11 +2,13 @@ import { Box, Button, FormLabel, Heading, Input, Text } from "@chakra-ui/react";
 import { FaUserCheck } from "react-icons/fa";
 import { SyntheticEvent, useState } from "react";
 import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 function SignUp() {
     const [fullName, setFullName] = useState<string>('');
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
+    const router = useRouter();
 
     async function register(fullName: string, email: string, password: string) {
         const response = await fetch(`/api/auth/signUpAPI/`, {
@@ -24,7 +26,15 @@ function SignUp() {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.message || 'Something went wrong!');
+            //throw new Error(data.message || 'Something went wrong!');
+            console.log('if');
+            Swal.fire({
+                position: 'center',
+                icon: 'warning',
+                title: `${data.message}`,
+                showConfirmButton: true,
+            });
+            return null;
         }
 
         return data;
@@ -34,7 +44,7 @@ function SignUp() {
         event.preventDefault();
         const response = await register(fullName, email, password);
         console.log(response);
-        if (response.ok) {
+        if (response) {
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -45,6 +55,15 @@ function SignUp() {
                 setFullName('');
                 setEmail('');
                 setPassword('');
+
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'To start using your account you need to login!',
+                    showConfirmButton: true,
+                }).then(() => {
+                    router.push('/login');
+                });
             });
         }
     }

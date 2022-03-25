@@ -18,6 +18,7 @@ interface SubForum {
     subForumImageURL: string[],
     dateCreated: Date,
     createdBy: string,
+    isOpen: boolean,
     forumCategoryId: number
 }
 

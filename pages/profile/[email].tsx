@@ -12,14 +12,14 @@ export async function getServerSideProps(context: any) {
 
     const { email } = context.params;
 
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        };
-    }
+    // if (!session) {
+    //     return {
+    //         redirect: {
+    //             destination: '/',
+    //             permanent: false,
+    //         },
+    //     };
+    // }
 
     const [responseUser, responseUserProfile, responseArticle] = await Promise.all([
         fetch(`${process.env.NEXTAUTH_URL}/api/user/getUserByEmail/${email}`, {

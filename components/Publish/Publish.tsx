@@ -1,4 +1,5 @@
 import { Box, Button, Container, Divider, Flex, FormLabel, Heading, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, Textarea, useDisclosure } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import { ChangeEvent, SyntheticEvent, useState } from "react";
 import { BsFillImageFill, BsParagraph } from "react-icons/bs";
 import { FaNewspaper, FaTrashAlt } from "react-icons/fa";
@@ -15,6 +16,7 @@ interface Article {
 }
 
 function Publish() {
+    const router = useRouter();
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
     const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure();
 
@@ -214,7 +216,7 @@ function Publish() {
                         title: 'Article Added Succesfully!',
                         showConfirmButton: true,
                     }).then(() => {
-
+                        router.push('/publish/explorePublish');
                     });
                 }
             }
@@ -290,9 +292,9 @@ function Publish() {
                             </Box>
                         </Box>
 
-                        <Box mb='2rem' textAlign={'center'}>
-                            <Button type="submit" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}>Submit</Button>
-                        </Box>
+                        <Flex mb='2rem' textAlign={'center'} justifyContent={'space-evenly'}>
+                            <Button disabled={!article.articleHeader} type="submit" mx="auto" bg={'red.300'} color={'black'} _hover={{ backgroundColor: 'red.500' }}>Submit</Button>
+                        </Flex>
                     </form>
                 </Box>
 

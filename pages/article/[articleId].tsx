@@ -12,14 +12,14 @@ export async function getServerSideProps(context: any) {
 
     const { articleId } = context.params;
 
-    if (!session) {
-        return {
-            redirect: {
-                destination: '/',
-                permanent: false,
-            },
-        };
-    }
+    // if (!session) {
+    //     return {
+    //         redirect: {
+    //             destination: '/',
+    //             permanent: false,
+    //         },
+    //     };
+    // }
 
     const [responseArticle] = await Promise.all([
         fetch(`${process.env.NEXTAUTH_URL}/api/article/getArticleByArticleId/${articleId}`, {
