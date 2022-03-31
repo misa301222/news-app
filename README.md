@@ -77,5 +77,10 @@ Profile Page where you can see information about the posts and messages. Customi
 
 ![image](https://user-images.githubusercontent.com/92189889/160963204-e33e4f55-7267-4626-865b-bfdeba97e5cf.png)
 
+## SignUp
+![image](https://user-images.githubusercontent.com/92189889/160963840-64c7da8e-2ad5-4627-aa6e-6cdfbd73851c.png)
+
+## Login
+![image](https://user-images.githubusercontent.com/92189889/160963852-6f64f641-48a6-4c51-96ba-c53bfb3f424c.png)
 
 
