@@ -1,5 +1,5 @@
 ## New App 
-News App created using NextJS with Typescript, NextAuth to handle Auth, ChakraUI and PostgreSQL.
+News App created using NextJS with Typescript, NextAuth to handle Auth, ChakraUI, Prisma and PostgreSQL.
 There's two main roles, user and admin, admin has more privileges.
 
 ## Home Page
@@ -23,6 +23,17 @@ In this section you can read the article. Each article can attach some images. A
 
 ![localhost_3000_publish_explorePublish - Opera 2022-03-30 19-01-46_Trim (1)](https://user-images.githubusercontent.com/92189889/160962351-4d9438a2-c480-4540-a40e-3c0669645291.gif)
 
+## Publish New Article
+This section is Simple, you only need to fill the data and publish a new Article.
+
+![image](https://user-images.githubusercontent.com/92189889/160963022-ce23e156-e05e-4e79-8cf9-3e04cdfa5474.png)
+
+## Edit Article
+Same section as Publish Article, the only difference is that here you can edit your article.
+
+![image](https://user-images.githubusercontent.com/92189889/160963286-67eb7bd6-484d-416a-bda0-135df4d15509.png)
+
+
 ## Forums Section
 In this section you can explore forums. Each forum is managed by the admin.
 
@@ -41,4 +52,30 @@ You can post a new reply in the subforums, you can also attach images and lock/u
 ## Unlocking a SubForum to Reply
 
 ![localhost_3000_forums_seeSubForum_11 - Opera 2022-03-30 18-53-48_Trim](https://user-images.githubusercontent.com/92189889/160962685-2fb4f664-4e0c-4170-b516-812ee67b99e4.gif)
+
+## Settings
+Here you can manage your profile information. The admin has especial tools, like manage Forums.
+
+![image](https://user-images.githubusercontent.com/92189889/160962799-ed9d556a-209e-4565-9055-4ad315dd7e77.png)
+
+## Manage Forums (Admin Only)
+![image](https://user-images.githubusercontent.com/92189889/160962873-ad5bc0be-1772-4000-b43f-589f680f1ca2.png)
+
+## Add New Forum (Admin Only)
+![image](https://user-images.githubusercontent.com/92189889/160962917-ce2f7eca-461d-4cd2-822c-0470a163ddcf.png)
+
+## Edit Forum (Admin Only)
+![image](https://user-images.githubusercontent.com/92189889/160962956-de9fc0b6-f894-4c7a-9bdd-3bf9b329f270.png)
+
+## Search Users
+Here you can search users by email. If you click any card you can enter their profile page.
+
+![image](https://user-images.githubusercontent.com/92189889/160963110-13e4d666-bef4-400d-bd97-0c8840a02bbf.png)
+
+## Profile Page
+Profile Page where you can see information about the posts and messages. Customizables messages and published Articles.
+
+![image](https://user-images.githubusercontent.com/92189889/160963204-e33e4f55-7267-4626-865b-bfdeba97e5cf.png)
+
+
 
