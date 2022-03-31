@@ -1,34 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## New App 
+News App created using NextJS with Typescript, NextAuth to handle Auth, ChakraUI and PostgreSQL.
+There's two main roles, user and admin, admin has more privileges.
 
-## Getting Started
+## Home Page
+This is the home page, you can see some information about the Web Applcation. At the bottom you can see some articles created by the users. You can enter read any article by clickin on keep reading.
 
-First, run the development server:
+![localhost_3000 - Opera 2022-03-30 18-35-02_Trim](https://user-images.githubusercontent.com/92189889/160962044-c9bf7cf7-7ebd-467d-80d4-c97a8620bfce.gif)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Explore Section
+This is the main section. Here you have tools to manage all the distinct functionalities (Publish a new Article, See your articles and delete them).
+At the bottom you can see a section where it shows recently created Articles.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+![image](https://user-images.githubusercontent.com/92189889/160962202-ba717c69-d0d5-43f9-bc98-8f6ce2322e45.png)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+You can also search articles by name by clicking in the button to search articles.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+![localhost_3000_publish_explorePublish - Opera 2022-03-30 18-41-50_Trim (1)](https://user-images.githubusercontent.com/92189889/160962264-2d4bdff5-c708-4efc-bf30-d9524223c11a.gif)
 
-## Learn More
+## Read Article
+In this section you can read the article. Each article can attach some images. And at the bottom of the page there's the author of the article.
 
-To learn more about Next.js, take a look at the following resources:
+![localhost_3000_publish_explorePublish - Opera 2022-03-30 19-01-46_Trim (1)](https://user-images.githubusercontent.com/92189889/160962351-4d9438a2-c480-4540-a40e-3c0669645291.gif)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Forums Section
+In this section you can explore forums. Each forum is managed by the admin.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![image](https://user-images.githubusercontent.com/92189889/160962446-3e96bfc7-bedd-4869-81d3-f9db6fc46f7c.png)
 
-## Deploy on Vercel
+## SubForums Section
+If you enter a forum, there's multiple subforums, which are topics relevant to the forum.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![image](https://user-images.githubusercontent.com/92189889/160962517-07c9de50-9d2b-481e-a74e-ccee3fddeef5.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Posting a new Reply
+You can post a new reply in the subforums, you can also attach images and lock/unlock the forum depending on what you want. The Admin can lock/unlock all subforums, meanwhile the users can only lock/unlock their respective subforums.
+
+![localhost_3000_forums_newSubForum_forumCategoryId=6 - Opera 2022-03-30 18-53-31_Trim](https://user-images.githubusercontent.com/92189889/160962571-adb17449-49ae-4d25-985f-43b387ad833b.gif)
+
+## Unlocking a SubForum to Reply
+
+![localhost_3000_forums_seeSubForum_11 - Opera 2022-03-30 18-53-48_Trim](https://user-images.githubusercontent.com/92189889/160962685-2fb4f664-4e0c-4170-b516-812ee67b99e4.gif)
+
